@@ -1,221 +1,221 @@
-#define _CRT_SECURE_NO_WARNINGS //î÷øàå ùîåãéò ì÷åîôééìø ìãìâ òì àæäøåú áðåâò ìôåð÷öéåú ìà áèåçåú
-#include <stdio.h>//äåñôú ñôøééú ôåð÷öéåú ùì ÷ìè ôìè
-#include <stdlib.h>//äåñôú ñôøééú ôåð÷öéåú ñèðãøèéåú
-#include "math_parser.h"//äåñôú header file 
-#include <string.h>//äåñôú ñôøééú ôåð÷öéåú ùì îçøåæåú
-#include <stdbool.h>//äåñôú ñôøééú ùéîåù áàîú àå ù÷ø
-#define NULL_TOKEN -9999//îà÷øå ùéëðéñ áëì ùéîåù -999
+#define _CRT_SECURE_NO_WARNINGS //מקראו שמודיע לקומפיילר לדלג על אזהרות בנוגע לפונקציות לא בטוחות
+#include <stdio.h>//הוספת ספריית פונקציות של קלט פלט
+#include <stdlib.h>//הוספת ספריית פונקציות סטנדרטיות
+#include "math_parser.h"//הוספת header file 
+#include <string.h>//הוספת ספריית פונקציות של מחרוזות
+#include <stdbool.h>//הוספת ספריית שימוש באמת או שקר
+#define NULL_TOKEN -9999//מאקרו שיכניס בכל שימוש -999
 typedef enum sings { add = 1, sub, mult, divide }operands;
-typedef struct mathtoken//éöéøú îáðä èå÷ï åîúï ùí ÷éöåø
+typedef struct mathtoken//יצירת מבנה טוקן ומתן שם קיצור
 {
-	int value;//àí æä îñôø àæ éùåîø äàåøê
-	char sign;//àí æä ñéîï àæ éùåîø äñéîï äîúîèé
-	bool number;//àîú àå ù÷ø àí éù îñôø
+	int value;//אם זה מספר אז ישומר האורך
+	char sign;//אם זה סימן אז ישומר הסימן המתמטי
+	bool number;//אמת או שקר אם יש מספר
 }tokens;
 
-static int FindNumbers(int *index, char * equation)//èòðú ëðéñä: ÷áìú îöáéò ìàéðã÷ñ åîöáéò ìîòøê, èòðú éöéàä: äçæøú äîñôø äîåøëá îøöó ñôøåú áîçøåæú åòãëåï òøê äîåöáò áîé÷åí äðåëçé áîòøê ìöåøê ãéìåâ ùì éöéøú èå÷ï ìëì ñôøä
+static int FindNumbers(int *index, char * equation)//טענת כניסה: קבלת מצביע לאינדקס ומצביע למערך, טענת יציאה: החזרת המספר המורכב מרצף ספרות במחרוזת ועדכון ערך המוצבע במיקום הנוכחי במערך לצורך דילוג של יצירת טוקן לכל ספרה
 {
-	int num = 0;//éöéøú îùúðä ùéùîåø àú äîñôø äñåôé
-	int i = *index;//éöéøú îùúðä äîëéì àú äòøê ùäîöáéò îöáéò òìéå
-	int length = strlen(equation);//éöéøú îùúðä äîëéì àú àåøê äîçøåæú ìî÷øä ùëì äîçøåæú äéà îñôø
-	while (i < length && equation[i] >= '0' && equation[i] <= '9')//ëì òåã äàéðã÷ñ ÷èï îñåó äîçøåæú åäúå áàåú äðëåçéú æä ñôøä
+	int num = 0;//יצירת משתנה שישמור את המספר הסופי
+	int i = *index;//יצירת משתנה המכיל את הערך שהמצביע מצביע עליו
+	int length = strlen(equation);//יצירת משתנה המכיל את אורך המחרוזת למקרה שכל המחרוזת היא מספר
+	while (i < length && equation[i] >= '0' && equation[i] <= '9')//כל עוד האינדקס קטן מסוף המחרוזת והתו באות הנכוחית זה ספרה
 	{
-		num = num * 10 + equation[i] - '0';//äîñôø éåøëá îäñôøä äðåëçéú ááñéñ 10
-		i++;//äòìàú äîöééï äðåëçé ëãé ùáôòåìä ùì äèå÷ðéí éöøå èå÷ï àçã ìëì äîñôø åìà èå÷ï ìëì ñôøä áðôøã
+		num = num * 10 + equation[i] - '0';//המספר יורכב מהספרה הנוכחית בבסיס 10
+		i++;//העלאת המציין הנוכחי כדי שבפעולה של הטוקנים יצרו טוקן אחד לכל המספר ולא טוקן לכל ספרה בנפרד
 	}
-	*index = i;//òãëåï äîöáéò òí äòøê äçãù
-	return num;//äçæøú äîñôø äîåøëá îøöó äñôøåú
+	*index = i;//עדכון המצביע עם הערך החדש
+	return num;//החזרת המספר המורכב מרצף הספרות
 }
-bool isUnaryMinus(char* equation, int minus_index)//èòðú ëðéñä: äëðñú îöáéò ìîçøåæú åàéðã÷ñ ìôðé äðåëçé ëàùø äúå áàéðã÷ñ äðåëçé äåà îñôø ìöåøê áãé÷ú äñéîï äîâéò ìôðé äîñôø, èòðú éöéàä: äçæøú àîú àå ù÷ø äàí îñôø áîé÷åí äðåëçé äåà îñôø ùìéìé
+bool isUnaryMinus(char* equation, int minus_index)//טענת כניסה: הכנסת מצביע למחרוזת ואינדקס לפני הנוכחי כאשר התו באינדקס הנוכחי הוא מספר לצורך בדיקת הסימן המגיע לפני המספר, טענת יציאה: החזרת אמת או שקר האם מספר במיקום הנוכחי הוא מספר שלילי
 {
-	if (minus_index == 0)//àí àéðã÷ñ ìôðé äðåëçé äåà 0 àæ æä îñôø ùìéìé
+	if (minus_index == 0)//אם אינדקס לפני הנוכחי הוא 0 אז זה מספר שלילי
 	{
-		return true;//äçæøú àîú
+		return true;//החזרת אמת
 	}
 
-	int prev_index = minus_index - 1;//ùîéøú äàéðã÷ñ ùìôðé äàéðã÷ñ ùì äñéîï
-	while (prev_index >= 0 && (equation[prev_index] == ' ' || equation[prev_index] == '\t'))//ëì òåã äàéðã÷ñ ìà áäúçìú äîòøê åäúå áîé÷åí äàéðã÷ñ äåà øååç
+	int prev_index = minus_index - 1;//שמירת האינדקס שלפני האינדקס של הסימן
+	while (prev_index >= 0 && (equation[prev_index] == ' ' || equation[prev_index] == '\t'))//כל עוד האינדקס לא בהתחלת המערך והתו במיקום האינדקס הוא רווח
 	{
-		prev_index--;//äàéðã÷ñ éøã
+		prev_index--;//האינדקס ירד
 	}
-	if (prev_index < 0)//àí äîöééï äåà ìôðé úçéìú äîòøê æä îñôø ùìéìé
+	if (prev_index < 0)//אם המציין הוא לפני תחילת המערך זה מספר שלילי
 	{
-		return true;//äçæøú àîú
+		return true;//החזרת אמת
 	}
-	char prev_char = equation[prev_index];//ùîéøú äúå ìôðé îéðåñ
-	if (prev_char == '(' || prev_char == '+' || prev_char == '-' ||//àí äúå ùì îéðåñ áà àçøé àçã îäñéîðéí æä îñôø ùìéìé
+	char prev_char = equation[prev_index];//שמירת התו לפני מינוס
+	if (prev_char == '(' || prev_char == '+' || prev_char == '-' ||//אם התו של מינוס בא אחרי אחד מהסימנים זה מספר שלילי
 		prev_char == '*' || prev_char == '/')
 	{
-		return true;//äçæøú àîú
+		return true;//החזרת אמת
 	}
-	return false;//äçæøú ù÷ø
+	return false;//החזרת שקר
 }
 
 
-static int Tokenize(tokens* tokenptr, char* equation, int* p_index, int equationlength)//èòðú ëðéñä: äëðñú îòøê èå÷ðéí øé÷, îçøåæú, îöáéò ìàéðã÷ñ ðåëçé åàåøê äîçøåæú, èòðú éöéàä: îéìåé îòøê äèå÷ðéí áäúàí ìúååéí áîçøåæú
+static int Tokenize(tokens* tokenptr, char* equation, int* p_index, int equationlength)//טענת כניסה: הכנסת מערך טוקנים ריק, מחרוזת, מצביע לאינדקס נוכחי ואורך המחרוזת, טענת יציאה: מילוי מערך הטוקנים בהתאם לתווים במחרוזת
 {
-	int index = *p_index;//îùúðä îöééï ðåëçé ùùååä ìòøê ùäîöáéò îöáéò òìéå
+	int index = *p_index;//משתנה מציין נוכחי ששווה לערך שהמצביע מצביע עליו
 
-	while (index < equationlength && (equation[index] == ' ' || equation[index] == '\t'))//ëì òåã äàéðã÷ñ ìôðé ñåó äîòøê åäúå áúà äðåëçé äåà øååç
+	while (index < equationlength && (equation[index] == ' ' || equation[index] == '\t'))//כל עוד האינדקס לפני סוף המערך והתו בתא הנוכחי הוא רווח
 	{
 
-		tokenptr[index].value = NULL_TOKEN;//äèå÷ï éäéä îñôø áòì îà÷øå ùéâøåí ìäúòìîåú ëãé ìà ìäçùéá øååç ëèå÷ï
+		tokenptr[index].value = NULL_TOKEN;//הטוקן יהיה מספר בעל מאקרו שיגרום להתעלמות כדי לא להחשיב רווח כטוקן
 		tokenptr[index].sign = 0;
 		tokenptr[index].number = false;
 
-		index++;//äòìàú äîöééï äðåëçé áäúàí ìëîåú äøååçéí ùðîöàå
+		index++;//העלאת המציין הנוכחי בהתאם לכמות הרווחים שנמצאו
 	}
 
-	*p_index = index; //òãëåï äîöáéò ìàéðã÷ñ äðåëçé áòøê äàéðã÷ñ äðåëçé äçãù ìöåøê ãéìåâ òì äøååçéí
+	*p_index = index; //עדכון המצביע לאינדקס הנוכחי בערך האינדקס הנוכחי החדש לצורך דילוג על הרווחים
 
-	if (index < equationlength)//ëì òåã äàéðã÷ñ ìôðéé ñåó äîòøê
+	if (index < equationlength)//כל עוד האינדקס לפניי סוף המערך
 	{
-		tokens t1;//éååöø îáðä ùì èå÷ï
+		tokens t1;//יווצר מבנה של טוקן
 
-		if (equation[index] == '-' && isUnaryMinus(equation, index))//àí äúå áîé÷åí äðåëçé áîçøåæú äåà îéðåñ åäåçæø àîú îáãé÷ú äîéðåñ
+		if (equation[index] == '-' && isUnaryMinus(equation, index))//אם התו במיקום הנוכחי במחרוזת הוא מינוס והוחזר אמת מבדיקת המינוס
 		{
-			index++;//òãëåï äàéðã÷ñ äðåëçé ìöåøê áãé÷ú øöó äîñôøéí
-			int start_index = index;//éöéøú îùúðä îöééï äîúçìúé áòì äîöééï äðåëçé
-			int num = FindNumbers(&index, equation);//äçæøú äîñôø áäúàí øöó úååé äîñôøéí îäîöééï äðåëçé
+			index++;//עדכון האינדקס הנוכחי לצורך בדיקת רצף המספרים
+			int start_index = index;//יצירת משתנה מציין המתחלתי בעל המציין הנוכחי
+			int num = FindNumbers(&index, equation);//החזרת המספר בהתאם רצף תווי המספרים מהמציין הנוכחי
 
-			if (start_index == index)//àí äîöééï ääúçìúé ùååä ìîöééï ùòåãëï îäôòåìä ñéîï ùàçøé äñéîï - éù ñéîï àçø åæä ìà çå÷é
+			if (start_index == index)//אם המציין ההתחלתי שווה למציין שעודכן מהפעולה סימן שאחרי הסימן - יש סימן אחר וזה לא חוקי
 			{
-				printf("Input is invalid\n");//äçæøú äåãòä ù÷ìè ìà çå÷é
-				return -1;//éöéàä îäôòåìä
+				printf("Input is invalid\n");//החזרת הודעה שקלט לא חוקי
+				return -1;//יציאה מהפעולה
 			}
 
-			t1.value = -num;//àí äîñôø çå÷é àæ äèå÷ï éäéä îñôø áòì äòøê ùì äîñôø ëùìéìé
-			t1.sign = 0;//ñéîï 0 àåîø ùæä ìà ñéîï
-			t1.number = true;//àîú ìùãä äàí æä îñôø
-			tokenptr[*p_index] = t1; // ùîéøú äèå÷ï äðåëçé áîòøê äèå÷ðéí áîöééï äðåëçé
+			t1.value = -num;//אם המספר חוקי אז הטוקן יהיה מספר בעל הערך של המספר כשלילי
+			t1.sign = 0;//סימן 0 אומר שזה לא סימן
+			t1.number = true;//אמת לשדה האם זה מספר
+			tokenptr[*p_index] = t1; // שמירת הטוקן הנוכחי במערך הטוקנים במציין הנוכחי
 
-			for (int i = start_index; i < index; i++)//äúòìîåú îëì äèå÷ðéí ùäôëå ìîñôø àçã áëê ùòåáøéí îäîöééï ääúçìúé òã äñåôé ùì øöó äîéñôøéí åäôéëú ëì îñôø ùäôøê ìèå÷ï àçã ìèå÷ï ùì äúòìîåú
+			for (int i = start_index; i < index; i++)//התעלמות מכל הטוקנים שהפכו למספר אחד בכך שעוברים מהמציין ההתחלתי עד הסופי של רצף המיספרים והפיכת כל מספר שהפרך לטוקן אחד לטוקן של התעלמות
 			{
 				tokenptr[i].value = NULL_TOKEN;
 				tokenptr[i].sign = 0;
 				tokenptr[i].number = true;
 			}
 
-			*p_index = index;//òãëåï äîöáéò ìîöééï äðåëçé áòøê äðåëçé
+			*p_index = index;//עדכון המצביע למציין הנוכחי בערך הנוכחי
 		}
-		else if (equation[index] >= '0' && equation[index] <= '9')//àí äúå áîé÷åí äðåëçé áîçøåæú æä îñôø
+		else if (equation[index] >= '0' && equation[index] <= '9')//אם התו במיקום הנוכחי במחרוזת זה מספר
 		{
-			int start_index = index;//éöéøú îùúðä ùùåîø àú äîé÷åí äðåëçé áîçøåæú
-			int num = FindNumbers(&index, equation);//îöéàú øöó äîéñôøéí ááñéñ 10 åäçæøúå åòãëåï äîöééï äðåëçé áäúàí ìøöó
+			int start_index = index;//יצירת משתנה ששומר את המיקום הנוכחי במחרוזת
+			int num = FindNumbers(&index, equation);//מציאת רצף המיספרים בבסיס 10 והחזרתו ועדכון המציין הנוכחי בהתאם לרצף
 
-			t1.value = num;//éöéøú èå÷ï ùì îñôø åùîéøú øöó äîñôøéí ëîñôø àçã ááñéñ 10
+			t1.value = num;//יצירת טוקן של מספר ושמירת רצף המספרים כמספר אחד בבסיס 10
 			t1.sign = 0;
 			t1.number = true;
 			tokenptr[start_index] = t1;
 
-			for (int i = start_index + 1; i < index; i++)//äúòìîåú îëì äñôøåú ùäôëå ìèå÷ï ùì îñôø àçã
+			for (int i = start_index + 1; i < index; i++)//התעלמות מכל הספרות שהפכו לטוקן של מספר אחד
 			{
 				tokenptr[i].value = NULL_TOKEN;
 				tokenptr[i].sign = 0;
 				tokenptr[i].number = true;
 			}
 
-			*p_index = index;//òãëåï äîöééï äðåëçé ëê ùñãøú ñôøåú úäôåê ìîñôø àçã åùäîçøåæú úîùéê îäîé÷åí ùì äñôøä äàçøåðä
+			*p_index = index;//עדכון המציין הנוכחי כך שסדרת ספרות תהפוך למספר אחד ושהמחרוזת תמשיך מהמיקום של הספרה האחרונה
 		}
-		else if (equation[index] == '+' || equation[index] == '-' ||//àí äúå áîöééï äðåëçé áîçøåæú äåà ñéîï
+		else if (equation[index] == '+' || equation[index] == '-' ||//אם התו במציין הנוכחי במחרוזת הוא סימן
 			equation[index] == '*' || equation[index] == '/' ||
 			equation[index] == '(' || equation[index] == ')')
 		{
-			t1.value = 0;//äåà ééùîø ëèå÷ï ùì îéîï
-			t1.sign = equation[index];//äñéîï éäéä äúå áîé÷åí äðåëçé
-			t1.number = false;//îëéååï ùæä ñéîï åìà ñôøä éñåîï ù÷ø òì äàí æä îñôø
+			t1.value = 0;//הוא יישמר כטוקן של מימן
+			t1.sign = equation[index];//הסימן יהיה התו במיקום הנוכחי
+			t1.number = false;//מכיוון שזה סימן ולא ספרה יסומן שקר על האם זה מספר
 			tokenptr[index] = t1;
 
-			index++;//òãëåï äàéðã÷ñ
-			*p_index = index;//òãëåï äîöáéò ìàéðã÷ñ äðåëçé òí äàéðã÷ñ äîòåãëï
+			index++;//עדכון האינדקס
+			*p_index = index;//עדכון המצביע לאינדקס הנוכחי עם האינדקס המעודכן
 		}
 		else
 		{
-			printf("Input is invalid\n");//àí æä ìà îéðåñ , îñôø àå ñéîï àæ ä÷ìè ìà çå÷é åìëï éåçæø äåãòú ùâéàä
-			return -1; //ùìéçú ÷åã ùì ùâéàä
+			printf("Input is invalid\n");//אם זה לא מינוס , מספר או סימן אז הקלט לא חוקי ולכן יוחזר הודעת שגיאה
+			return -1; //שליחת קוד של שגיאה
 		}
 
-		return Tokenize(tokenptr, equation, p_index, equationlength);//äôòåìä øé÷åøñéáéú åìëï úúáöò ÷øéàä ðåñôú òí äôøîèøéí äîòåãëðéí
+		return Tokenize(tokenptr, equation, p_index, equationlength);//הפעולה ריקורסיבית ולכן תתבצע קריאה נוספת עם הפרמטרים המעודכנים
 	}
 
-	return 0; //áîéãä åéù éöéàä îäôòåìä éåçæø ÷åã ùì äöìçú äôòåìä
+	return 0; //במידה ויש יציאה מהפעולה יוחזר קוד של הצלחת הפעולה
 }
 
 
 
 
-char* CreateEquation()//èòðú ëðéñä: ÷øéàä ìôòåìä, èòðú éöéàä: äçæøú îöáéò ìîòøê áòì àåøê îãåéé÷ ùì äúååéí ùðëðñå áå úåê ùéîåù áä÷öàú æéëøåï
+char* CreateEquation()//טענת כניסה: קריאה לפעולה, טענת יציאה: החזרת מצביע למערך בעל אורך מדוייק של התווים שנכנסו בו תוך שימוש בהקצאת זיכרון
 {
-	char tempBuffer[100];//éöéøú îòøê æîðé ùéùîåø àú äîçøåæú ùúé÷ìè
+	char tempBuffer[100];//יצירת מערך זמני שישמור את המחרוזת שתיקלט
 	printf("Enter equation: \n");
-	if (fgets(tempBuffer, sizeof(tempBuffer), stdin) == NULL)//ùéîåù áôåð÷öééú ÷ìè äîàôùøú ÷ìéèú øååçéí åáãé÷ú àí äòøê áîé÷åí äîòøê äåà null
+	if (fgets(tempBuffer, sizeof(tempBuffer), stdin) == NULL)//שימוש בפונקציית קלט המאפשרת קליטת רווחים ובדיקת אם הערך במיקום המערך הוא null
 	{
-		printf("Input reading failed\n");//àí ëï úåçæø äåãòú ùâéàä
-		return NULL;//éåçæø ñéîï null
+		printf("Input reading failed\n");//אם כן תוחזר הודעת שגיאה
+		return NULL;//יוחזר סימן null
 	}
-	printf("Input reading succeeded\n");//àçøú úåãôñ äåãòú äöìçä
+	printf("Input reading succeeded\n");//אחרת תודפס הודעת הצלחה
 
-	size_t len = strlen(tempBuffer);//ùéîéøú àåøê äîçøåæú ùð÷ìèä áîùúðä îñåâ îñôø ììà ñéîï îëéååï ùâåãì îòøê ìà éëåì ìäéåú ùìéìé
-	if (len > 0 && tempBuffer[len - 1] == '\n')//àí àåøê ä÷ìè âãåì î0 åäúå áîé÷åí äàçøåï á÷ìè äåà ñéîï ùì éøéãú ùåøä
+	size_t len = strlen(tempBuffer);//שימירת אורך המחרוזת שנקלטה במשתנה מסוג מספר ללא סימן מכיוון שגודל מערך לא יכול להיות שלילי
+	if (len > 0 && tempBuffer[len - 1] == '\n')//אם אורך הקלט גדול מ0 והתו במיקום האחרון בקלט הוא סימן של ירידת שורה
 	{
-		tempBuffer[len - 1] = '\0';//äùîú ñéîï ñéåí äîçøåæú áîé÷åí ùì ñéîï äåøãú äùåøä
-	}
-
-	int size = strlen(tempBuffer);//ùîéøú òøê äîçøåæú äæîðéú áîùúðä îñôø
-	char* equation = (char*)malloc((size + 1) * sizeof(char));//éöéøú îöáéò ìîçøåæú áòì îé÷åí áæéëøåï áâåãì äîçøåæú äæîðéú åòåã 1
-	if (equation == NULL)//àí äîöáéò îöáéò òì null 
-	{
-		printf("Memory allocation failed\n");//ìà ðéúï ìä÷ãéù î÷åí áæéëåï àæ úåãôñ äåãòú ùâéàä
-		return NULL;//äçæøú null
+		tempBuffer[len - 1] = '\0';//השמת סימן סיום המחרוזת במיקום של סימן הורדת השורה
 	}
 
-	strcpy(equation, tempBuffer);//äòú÷ú äîçøåæú ùð÷ìèä ìîçøåæú äæîðéú ìîçøåæú ùúéùîø
-	printf("Equation entered: %s\n", equation);//äúôñú äîçøåæú
-	return equation;//äçæøú äîöáéò ìîçøåæú
+	int size = strlen(tempBuffer);//שמירת ערך המחרוזת הזמנית במשתנה מספר
+	char* equation = (char*)malloc((size + 1) * sizeof(char));//יצירת מצביע למחרוזת בעל מיקום בזיכרון בגודל המחרוזת הזמנית ועוד 1
+	if (equation == NULL)//אם המצביע מצביע על null 
+	{
+		printf("Memory allocation failed\n");//לא ניתן להקדיש מקום בזיכון אז תודפס הודעת שגיאה
+		return NULL;//החזרת null
+	}
+
+	strcpy(equation, tempBuffer);//העתקת המחרוזת שנקלטה למחרוזת הזמנית למחרוזת שתישמר
+	printf("Equation entered: %s\n", equation);//התפסת המחרוזת
+	return equation;//החזרת המצביע למחרוזת
 }
 
-int main()//ôòåìä øàùéú ùúøåõ áúçéìú äúåëðéú
+int main()//פעולה ראשית שתרוץ בתחילת התוכנית
 {
-	char* equation = CreateEquation();//éöéøú îöáéò ìîçøåæú ùéöáéò òì àåúå îé÷åí ùîöáéò äîöáéò áôòåìä
-	if (equation == NULL)//àí äîöáéò îöáéò òì null
+	char* equation = CreateEquation();//יצירת מצביע למחרוזת שיצביע על אותו מיקום שמצביע המצביע בפעולה
+	if (equation == NULL)//אם המצביע מצביע על null
 	{
-		printf("Failed to create equation.\n");//äééúä áòééä áä÷ãùú äîé÷åí áæéëøåï àæ úåãôñ äåãòú ùâéàä 
-		return -1;//äçæøú ÷åã ùâéàä åéöéàä îäúåëðéú
+		printf("Failed to create equation.\n");//הייתה בעייה בהקדשת המיקום בזיכרון אז תודפס הודעת שגיאה 
+		return -1;//החזרת קוד שגיאה ויציאה מהתוכנית
 	}
-	printf("Memory allocation succeeded for string\n");//äãôñú äåãòú äöìçä
+	printf("Memory allocation succeeded for string\n");//הדפסת הודעת הצלחה
 
-	int equationlength = strlen(equation);//ùîéøú àåøê äîòøê áîùúðä îñôø
-	tokens* t1 = (tokens*)malloc(equationlength * sizeof(tokens));//éöéøú îòøê èå÷ðéí áàåøê äîçøåæú
-	if (t1 == NULL)//àí äîöáéò îöáéò òì null
+	int equationlength = strlen(equation);//שמירת אורך המערך במשתנה מספר
+	tokens* t1 = (tokens*)malloc(equationlength * sizeof(tokens));//יצירת מערך טוקנים באורך המחרוזת
+	if (t1 == NULL)//אם המצביע מצביע על null
 	{
-		printf("Memory allocation failed\n");//äééúä áòééä áä÷ãùú äîé÷åí áæéëøåï àæ úåãôñ äåãòú ùâéàä
-		free(equation);//ùçøåø äîé÷åí ùúôñ äîçøåæú îëéååï ùìà ðéúï ìäîùéê
-		return -1;//äçæøú ÷åã ùâéàä åéöéàä îäúåëðéú
+		printf("Memory allocation failed\n");//הייתה בעייה בהקדשת המיקום בזיכרון אז תודפס הודעת שגיאה
+		free(equation);//שחרור המיקום שתפס המחרוזת מכיוון שלא ניתן להמשיך
+		return -1;//החזרת קוד שגיאה ויציאה מהתוכנית
 	}
-	printf("Memory allocation succeeded for tokens\n");//äãôñú äåãòú äöìçä
+	printf("Memory allocation succeeded for tokens\n");//הדפסת הודעת הצלחה
 
-	for (int i = 0; i < equationlength; i++)//äôéëú ëì èå÷ï áîòøê äèå÷ðéí ìèå÷ï äúòìîåú
+	for (int i = 0; i < equationlength; i++)//הפיכת כל טוקן במערך הטוקנים לטוקן התעלמות
 	{
 		t1[i].value = NULL_TOKEN;
 		t1[i].sign = 0;
 		t1[i].number = false;
 	}
 
-	int index = 0;//éöéøú îùúðä ùì îöáéò ðåëçé
-	int answer = Tokenize(t1, equation, &index, equationlength);//îéìåé äîòøê áèå÷ðéí åùîéøú ÷åã äáéöåò áîùúðä
+	int index = 0;//יצירת משתנה של מצביע נוכחי
+	int answer = Tokenize(t1, equation, &index, equationlength);//מילוי המערך בטוקנים ושמירת קוד הביצוע במשתנה
 
-	if (answer != 0)//àí äåçæø îñôø ùìà 0
+	if (answer != 0)//אם הוחזר מספר שלא 0
 	{
-		printf("One of the tokens is invalid.\n");//ñéîï ùäééúä áòééä áàçã îäúååéí åìëï úåãôñ äåãòú ùâéàä
-		free(equation);//ùçøåø äî÷åí ùäîçøåæú úôñä áæéëøåï
-		free(t1);//ùçøåø äî÷åí ùîòøê äèå÷ðéí úôñ áæéëøåï
-		return -1;//äçæøú ÷åã ùâéàä åéöéàä îäúåëðéú
+		printf("One of the tokens is invalid.\n");//סימן שהייתה בעייה באחד מהתווים ולכן תודפס הודעת שגיאה
+		free(equation);//שחרור המקום שהמחרוזת תפסה בזיכרון
+		free(t1);//שחרור המקום שמערך הטוקנים תפס בזיכרון
+		return -1;//החזרת קוד שגיאה ויציאה מהתוכנית
 	}
-	printf("Successfully tokenized the string\n");//äãôñú äåãòú äöìçä
+	printf("Successfully tokenized the string\n");//הדפסת הודעת הצלחה
 
-	for (int i = 0; i < equationlength; i++)//äãôñú îòøê äèå÷ðéí
+	for (int i = 0; i < equationlength; i++)//הדפסת מערך הטוקנים
 	{
-		if (t1[i].value == NULL_TOKEN)//äúòìîåú îäèå÷ï äðåëçé
+		if (t1[i].value == NULL_TOKEN)//התעלמות מהטוקן הנוכחי
 		{
 			continue;
 		}
@@ -232,10 +232,14 @@ int main()//ôòåìä øàùéú ùúøåõ áúçéìú äúåëðéú
 		}
 	}
 
-	free(equation);//ùçøåø äæéëøåï ùùåéê ìîçøåæú
-	free(t1);//ùçøåø äæéëøåï ùùåéê ìîòøê äèå÷ðéí
-	return 0;//äçæøú ÷åã äöìçä åéöéàä îäúåëðéú
+	free(equation);//שחרור הזיכרון ששויך למחרוזת
+	free(t1);//שחרור הזיכרון ששויך למערך הטוקנים
+	return 0;//החזרת קוד הצלחה ויציאה מהתוכנית
 }
+
+
+
+
 
 
 
