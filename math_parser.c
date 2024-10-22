@@ -59,24 +59,24 @@ bool peek(stack* st1, tokens* t1)//מטרת כניסה: קבלת מצביע למ
 }
 
 
-int parser(tokens* postFix, int postFixLength)
+int parser(tokens* postFix, int postFixLength)//טענת כניסה: קריאה לפעולה עם מערך סופי וגודל מערך, טענת יציאה: החזרת ערך של המשוואה
 {
-	stack numbers;
+	stack numbers;//יצירת מחסנית למספרים
 	int num1 = 0, num2 = 0;
-	numbers.elements = malloc(postFixLength * sizeof(tokens));
-	if (numbers.elements == NULL)
+	numbers.elements = malloc(postFixLength * sizeof(tokens));//הקצבת זיכרון למערך המחסנית
+	if (numbers.elements == NULL)//אם יש בעיה בהקצבת הזיכרון
 	{
-		printf("Memory allocation failed\n");
+		printf("Memory allocation failed\n");//תוחזר שגיאה
 		return 1;
 	}
 	numbers.capacity = postFixLength;
 	numbers.top = -1;
 	tokens currentToken;
-	for (int i = 0; i < postFixLength; i++)
+	for (int i = 0; i < postFixLength; i++)//מעבר על המערך הסופי וחישוב הערך
 	{
-		if (postFix[i].number)
+		if (postFix[i].number)//אם הטוקן הנוכחי הוא מספר
 		{
-			if (!push(postFix[i], &numbers))
+			if (!push(postFix[i], &numbers))//הוא ידחף למחסנית
 			{
 				printf("The stack is full\n");
 				free(numbers.elements);
@@ -86,7 +86,7 @@ int parser(tokens* postFix, int postFixLength)
 		}
 		else
 		{
-			if (!pop(&numbers, &currentToken))
+			if (!pop(&numbers, &currentToken))//אם הטוקן הנוכחי הוא סימן
 			{
 				printf("The stack is empty\n");
 				free(numbers.elements);
@@ -94,9 +94,9 @@ int parser(tokens* postFix, int postFixLength)
 			}
 			num2 = currentToken.value;
 
-			if (!pop(&numbers, &currentToken))
+			if (!pop(&numbers, &currentToken))//שני המספרים האחרונים יצאו מהמחסנית
 			{
-				printf("The stack is empty\n");
+				printf("The stack is empty\n");//אם אין תוחזר שגיאה
 				free(numbers.elements);
 				return -1;
 			}
@@ -125,7 +125,7 @@ int parser(tokens* postFix, int postFixLength)
 			resultToken.value = num1;
 			resultToken.sign = 0;
 			resultToken.number = true;
-			if (!push(resultToken, &numbers))
+			if (!push(resultToken, &numbers))//דחיפת טוקן התוצאה למחסנית
 			{
 				printf("The stack is full\n");
 				free(numbers.elements);
@@ -134,14 +134,14 @@ int parser(tokens* postFix, int postFixLength)
 
 		}
 	}
-	if (!pop(&numbers, &currentToken))
+	if (!pop(&numbers, &currentToken))//הוצאת טוקן התוצאה מהמחסנית
 	{
-		printf("Invalid equation\n");
+		printf("Invalid equation\n");//אם המחסנית ריקה תוחזר שגיאה
 		free(numbers.elements);
 		return 1;
 	}
 	free(numbers.elements);
-	return currentToken.value;
+	return currentToken.value;//החזרת הערך הסופי
 
 }
 
@@ -302,7 +302,7 @@ tokens* InfixToPostfix(tokens* infix, int equationLength, int* postFixCount)//ט
 }
 
 
-static int FindNumbers(int* index, char* equation)//טענת כניסה: קריאה לפעולה עם מצביע לאינדקס ומערך, טענת יציאה: הפיכת רצף של טוקנים של ספרות למספר בבסיס 10 החזרתו ועידכון אינדקס המערך
+int FindNumbers(int* index, char* equation)//טענת כניסה: קריאה לפעולה עם מצביע לאינדקס ומערך, טענת יציאה: הפיכת רצף של טוקנים של ספרות למספר בבסיס 10 החזרתו ועידכון אינדקס המערך
 {
 	int num = 0;
 	int i = *index;
@@ -513,9 +513,9 @@ int main()
 	}
 	printf("\n");
 	int value = parser(postFix, postFixCount);
-	if (value != 1)
+	if (value != 1)//אם מהפעולה הוחזר -1
 	{
-		printf("Value: %d\n", value);
+		printf("Value: %d\n", value);//תוחזר שגיאה
 	}
 	free(equation);
 	free(t1);
