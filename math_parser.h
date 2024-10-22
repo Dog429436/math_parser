@@ -2,14 +2,14 @@
 
 extern char *equation;
 extern int size;
-typedef enum {//ιφιψϊ ψωιξϊ αηιψδ ωμ θεχπιν μτι ξρτψ, ριξο, ρεβψιιν εμΰ ηεχι
+typedef enum {//Χ™Χ¦Χ™Χ¨Χª Χ¨Χ©Χ™ΧΧª Χ‘Χ—Χ™Χ¨Χ” Χ©Χ ΧΧ•Χ§Χ Χ™Χ ΧΧ¤Χ™ ΧΧ΅Χ¤Χ¨, Χ΅Χ™ΧΧ, Χ΅Χ•Χ’Χ¨Χ™Χ™Χ Χ•ΧΧ Χ—Χ•Χ§Χ™
 	TOKEN_NUMBER,
 	TOKEN_OPERATOR,
 	TOKEN_PARENTHESIS,
 	TOKEN_INVALID
 } TokenType;
 
-typedef struct {//ξαπδ θεχπιν
+typedef struct {//ΧΧ‘Χ Χ” ΧΧ•Χ§Χ Χ™Χ
 	TokenType type;
 	char* value;
 } Token;
