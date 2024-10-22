@@ -1,60 +1,60 @@
-#define _CRT_SECURE_NO_WARNINGS //ξΰχψε δξΰτωψ ωιξεω ατεπχφιεϊ μΰ αθεηεϊ
+#define _CRT_SECURE_NO_WARNINGS //ΧΧΧ§Χ¨Χ• Χ”ΧΧΧ¤Χ©Χ¨ Χ©Χ™ΧΧ•Χ© Χ‘Χ¤Χ•Χ Χ§Χ¦Χ™Χ•Χª ΧΧ Χ‘ΧΧ•Χ—Χ•Χª
 #include <stdio.h>
 #include <stdlib.h>
 #include "math_parser.h" 
 #include <string.h>
 #include <stdbool.h>
-#define NULL_TOKEN -9999 //ξΰχψε δξρξμ θεχπιν ωφψικ μδϊςμν ξδν
-#define ERROR_CODE 1//ξΰχψε ωμ χεγ ωβιΰδ
+#define NULL_TOKEN -9999 //ΧΧΧ§Χ¨Χ• Χ”ΧΧ΅ΧΧ ΧΧ•Χ§Χ Χ™Χ Χ©Χ¦Χ¨Χ™Χ ΧΧ”ΧªΧΆΧΧ ΧΧ”Χ
+#define ERROR_CODE 1//ΧΧΧ§Χ¨Χ• Χ©Χ Χ§Χ•Χ“ Χ©Χ’Χ™ΧΧ”
 
 
-typedef struct mathtoken//ξαπδ μιφιψϊ θεχο ξϊξθι
+typedef struct mathtoken//ΧΧ‘Χ Χ” ΧΧ™Χ¦Χ™Χ¨Χª ΧΧ•Χ§Χ ΧΧªΧΧΧ™
 {
-	int value;//ξωϊπδ ςψκ ωξηζιχ ΰϊ ςψκ δξρτψ
-	char sign;//ξωϊπδ δξηζιχ ΰϊ δριξο δξϊξθι
-	bool number;//ξωϊπδ δωεξψ ΰξϊ ΰε ωχψ ΰν δθεχο δεΰ ξρτψ
+	int value;//ΧΧ©ΧªΧ Χ” ΧΆΧ¨Χ Χ©ΧΧ—Χ–Χ™Χ§ ΧΧª ΧΆΧ¨Χ Χ”ΧΧ΅Χ¤Χ¨
+	char sign;//ΧΧ©ΧªΧ Χ” Χ”ΧΧ—Χ–Χ™Χ§ ΧΧª Χ”Χ΅Χ™ΧΧ Χ”ΧΧªΧΧΧ™
+	bool number;//ΧΧ©ΧªΧ Χ” Χ”Χ©Χ•ΧΧ¨ ΧΧΧª ΧΧ• Χ©Χ§Χ¨ ΧΧ Χ”ΧΧ•Χ§Χ Χ”Χ•Χ ΧΧ΅Χ¤Χ¨
 } tokens;
 
 
-typedef struct stackForPostfix//ξαπδ μιφιψϊ ξηρπιϊ
+typedef struct stackForPostfix//ΧΧ‘Χ Χ” ΧΧ™Χ¦Χ™Χ¨Χª ΧΧ—Χ΅Χ Χ™Χª
 {
-	tokens* elements;//ξςψκ γιπΰξι δξιιφβ ΰϊ δξηρπιϊ
-	int top;//ξωϊπδ ωμ δΰιπγχρ δπεληι αξηρπιϊ
-	int capacity;//ξωϊπδ ωμ ΰεψκ δξηρπιϊ
+	tokens* elements;//ΧΧΆΧ¨Χ Χ“Χ™Χ ΧΧΧ™ Χ”ΧΧ™Χ™Χ¦Χ’ ΧΧª Χ”ΧΧ—Χ΅Χ Χ™Χª
+	int top;//ΧΧ©ΧªΧ Χ” Χ©Χ Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ”Χ Χ•Χ›Χ—Χ™ Χ‘ΧΧ—Χ΅Χ Χ™Χª
+	int capacity;//ΧΧ©ΧªΧ Χ” Χ©Χ ΧΧ•Χ¨Χ Χ”ΧΧ—Χ΅Χ Χ™Χª
 } stack;
 
 
-bool push(tokens token, stack* st1)//ξθψϊ λπιρδ: χαμϊ θεχο εξφαις μξηρπιϊ, θςπϊ ιφιΰδ: γηιτϊ δθεχο μξηρπιϊ εδηζψϊ ΰξϊ ΰε ωχψ ΰν δτςεμδ δφμιηδ
+bool push(tokens token, stack* st1)//ΧΧΧ¨Χª Χ›Χ Χ™Χ΅Χ”: Χ§Χ‘ΧΧª ΧΧ•Χ§Χ Χ•ΧΧ¦Χ‘Χ™ΧΆ ΧΧΧ—Χ΅Χ Χ™Χª, ΧΧΆΧ Χª Χ™Χ¦Χ™ΧΧ”: Χ“Χ—Χ™Χ¤Χª Χ”ΧΧ•Χ§Χ ΧΧΧ—Χ΅Χ Χ™Χª Χ•Χ”Χ—Χ–Χ¨Χª ΧΧΧª ΧΧ• Χ©Χ§Χ¨ ΧΧ Χ”Χ¤ΧΆΧ•ΧΧ” Χ”Χ¦ΧΧ™Χ—Χ”
 {
-	if (st1->top == st1->capacity - 1)//ΰν δξηρπιϊ ξμΰδ
+	if (st1->top == st1->capacity - 1)//ΧΧ Χ”ΧΧ—Χ΅Χ Χ™Χª ΧΧΧΧ”
 	{
-		return false;//ιεηζψ ωχψ
+		return false;//Χ™Χ•Χ—Χ–Χ¨ Χ©Χ§Χ¨
 	}
-	st1->top++;//ΰηψϊ δΰιπγχρ δπεληι ιςμδ
-	st1->elements[st1->top] = token;//δθεχο ιωξψ αψΰω δξηρπιϊ
-	return true;//δηζψϊ ΰξϊ ωδτςεμδ δφμιηδ
+	st1->top++;//ΧΧ—Χ¨Χª Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ”Χ Χ•Χ›Χ—Χ™ Χ™ΧΆΧΧ”
+	st1->elements[st1->top] = token;//Χ”ΧΧ•Χ§Χ Χ™Χ©ΧΧ¨ Χ‘Χ¨ΧΧ© Χ”ΧΧ—Χ΅Χ Χ™Χª
+	return true;//Χ”Χ—Χ–Χ¨Χª ΧΧΧª Χ©Χ”Χ¤ΧΆΧ•ΧΧ” Χ”Χ¦ΧΧ™Χ—Χ”
 }
 
 
-bool pop(stack* st1, tokens* t1)//ξθψϊ λπιρδ: χαμϊ ξφαις μξηρπιϊ εξφαις μθεχο, θςπϊ ιφιΰδ: δηζψϊ δθεχο αψΰω δξηρπιϊ εδηζψϊ ΰξϊ ΰε ωχψ ΰν δτςεμδ δφμιηδ
+bool pop(stack* st1, tokens* t1)//ΧΧΧ¨Χª Χ›Χ Χ™Χ΅Χ”: Χ§Χ‘ΧΧª ΧΧ¦Χ‘Χ™ΧΆ ΧΧΧ—Χ΅Χ Χ™Χª Χ•ΧΧ¦Χ‘Χ™ΧΆ ΧΧΧ•Χ§Χ, ΧΧΆΧ Χª Χ™Χ¦Χ™ΧΧ”: Χ”Χ—Χ–Χ¨Χª Χ”ΧΧ•Χ§Χ Χ‘Χ¨ΧΧ© Χ”ΧΧ—Χ΅Χ Χ™Χª Χ•Χ”Χ—Χ–Χ¨Χª ΧΧΧª ΧΧ• Χ©Χ§Χ¨ ΧΧ Χ”Χ¤ΧΆΧ•ΧΧ” Χ”Χ¦ΧΧ™Χ—Χ”
 {
-	if (st1->top < 0)//ΰν δξηρπιϊ ψιχδ
+	if (st1->top < 0)//ΧΧ Χ”ΧΧ—Χ΅Χ Χ™Χª Χ¨Χ™Χ§Χ”
 	{
-		return false;//ιεηζψ ωχψ
+		return false;//Χ™Χ•Χ—Χ–Χ¨ Χ©Χ§Χ¨
 	}
-	*t1 = st1->elements[st1->top];//ΰηψϊ ιεηζψ δθεχο αψΰω δξηρπιϊ
-	st1->top--;//δΰιπγχρ δπεληι ιψγ
+	*t1 = st1->elements[st1->top];//ΧΧ—Χ¨Χª Χ™Χ•Χ—Χ–Χ¨ Χ”ΧΧ•Χ§Χ Χ‘Χ¨ΧΧ© Χ”ΧΧ—Χ΅Χ Χ™Χª
+	st1->top--;//Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ”Χ Χ•Χ›Χ—Χ™ Χ™Χ¨Χ“
 	return true;
 }
 
 
-bool peek(stack* st1, tokens* t1)//ξθψϊ λπιρδ: χαμϊ ξφαις μξηρπιϊ εξφαις μθεχο, θςπϊ ιφιΰδ: δηζψϊ δθεχο δπεληι αμι μδεφιΰε ξδξηρπιϊ εδηζψϊ ΰξϊ ΰε ωχψ ΰν δτςεμδ δφμιηδ
+bool peek(stack* st1, tokens* t1)//ΧΧΧ¨Χª Χ›Χ Χ™Χ΅Χ”: Χ§Χ‘ΧΧª ΧΧ¦Χ‘Χ™ΧΆ ΧΧΧ—Χ΅Χ Χ™Χª Χ•ΧΧ¦Χ‘Χ™ΧΆ ΧΧΧ•Χ§Χ, ΧΧΆΧ Χª Χ™Χ¦Χ™ΧΧ”: Χ”Χ—Χ–Χ¨Χª Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ Χ‘ΧΧ™ ΧΧ”Χ•Χ¦Χ™ΧΧ• ΧΧ”ΧΧ—Χ΅Χ Χ™Χª Χ•Χ”Χ—Χ–Χ¨Χª ΧΧΧª ΧΧ• Χ©Χ§Χ¨ ΧΧ Χ”Χ¤ΧΆΧ•ΧΧ” Χ”Χ¦ΧΧ™Χ—Χ”
 {
-	if (st1->top < 0)//ΰν δξηρπιϊ ψιχδ
+	if (st1->top < 0)//ΧΧ Χ”ΧΧ—Χ΅Χ Χ™Χª Χ¨Χ™Χ§Χ”
 	{
-		return false;//ιεηζψ ωχψ
+		return false;//Χ™Χ•Χ—Χ–Χ¨ Χ©Χ§Χ¨
 	}
-	*t1 = st1->elements[st1->top];//ΰηψϊ ιεηζψ δθεχο δπεληι αμι μδεφιΰ ΰεϊε ξδηξρπιϊ
+	*t1 = st1->elements[st1->top];//ΧΧ—Χ¨Χª Χ™Χ•Χ—Χ–Χ¨ Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ Χ‘ΧΧ™ ΧΧ”Χ•Χ¦Χ™Χ ΧΧ•ΧªΧ• ΧΧ”Χ—ΧΧ΅Χ Χ™Χª
 	return true;
 }
 
@@ -146,7 +146,7 @@ int parser(tokens* postFix, int postFixLength)
 }
 
 
-int getPrecedence(char sign)//θςπϊ λπιρδ: χψιΰδ μτςεμδ εδλπρϊ ϊε, θςπϊ ιφιΰδ: δηζψϊ ςψκ δςγιτεϊ ωμε
+int getPrecedence(char sign)//ΧΧΆΧ Χª Χ›Χ Χ™Χ΅Χ”: Χ§Χ¨Χ™ΧΧ” ΧΧ¤ΧΆΧ•ΧΧ” Χ•Χ”Χ›Χ Χ΅Χª ΧªΧ•, ΧΧΆΧ Χª Χ™Χ¦Χ™ΧΧ”: Χ”Χ—Χ–Χ¨Χª ΧΆΧ¨Χ Χ”ΧΆΧ“Χ™Χ¤Χ•Χª Χ©ΧΧ•
 {
 	switch (sign)
 	{
@@ -162,80 +162,80 @@ int getPrecedence(char sign)//θςπϊ λπιρδ: χψιΰδ μτςεμδ εδλπρϊ ϊε, θςπϊ ιφιΰδ: δη
 }
 
 
-bool hasHigherOrEqualPrecedence(tokens stackToken, tokens currentToken)//θςπϊ λπιρδ: χψιΰδ μτςεμδ ςν θεχο πεληι εθεχο αξηρπιϊ, θςπϊ ιφιΰδ: δηζψϊ ΰξϊ ΰε ωχψ ΰν δθεχπιν ηεχιιν εωδθεχο αξηρπιϊ αςμ ςγιτεϊ βαεδ ΰε ωεεδ μθεχο δπεληι
+bool hasHigherOrEqualPrecedence(tokens stackToken, tokens currentToken)//ΧΧΆΧ Χª Χ›Χ Χ™Χ΅Χ”: Χ§Χ¨Χ™ΧΧ” ΧΧ¤ΧΆΧ•ΧΧ” ΧΆΧ ΧΧ•Χ§Χ Χ Χ•Χ›Χ—Χ™ Χ•ΧΧ•Χ§Χ Χ‘ΧΧ—Χ΅Χ Χ™Χª, ΧΧΆΧ Χª Χ™Χ¦Χ™ΧΧ”: Χ”Χ—Χ–Χ¨Χª ΧΧΧª ΧΧ• Χ©Χ§Χ¨ ΧΧ Χ”ΧΧ•Χ§Χ Χ™Χ Χ—Χ•Χ§Χ™Χ™Χ Χ•Χ©Χ”ΧΧ•Χ§Χ Χ‘ΧΧ—Χ΅Χ Χ™Χª Χ‘ΧΆΧ ΧΆΧ“Χ™Χ¤Χ•Χª Χ’Χ‘Χ•Χ” ΧΧ• Χ©Χ•Χ•Χ” ΧΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™
 {
-	int precedenceStack = getPrecedence(stackToken.sign);//χψιΰϊ τςεμϊ ςψκ ςγιτεϊ ωμ δθεχο αξηρπιϊ
-	int precedenceCurrent = getPrecedence(currentToken.sign);//χψιΰϊ τςεμϊ ςψκ ςγιτεϊ ωμ δθεχο δπεληι 
+	int precedenceStack = getPrecedence(stackToken.sign);//Χ§Χ¨Χ™ΧΧª Χ¤ΧΆΧ•ΧΧª ΧΆΧ¨Χ ΧΆΧ“Χ™Χ¤Χ•Χª Χ©Χ Χ”ΧΧ•Χ§Χ Χ‘ΧΧ—Χ΅Χ Χ™Χª
+	int precedenceCurrent = getPrecedence(currentToken.sign);//Χ§Χ¨Χ™ΧΧª Χ¤ΧΆΧ•ΧΧª ΧΆΧ¨Χ ΧΆΧ“Χ™Χ¤Χ•Χª Χ©Χ Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ 
 
-	if (precedenceStack == -1 || precedenceCurrent == -1) //δηζψϊ ωχψ ΰν ωπι δθεχπιν μΰ ηεχιιν
+	if (precedenceStack == -1 || precedenceCurrent == -1) //Χ”Χ—Χ–Χ¨Χª Χ©Χ§Χ¨ ΧΧ Χ©Χ Χ™ Χ”ΧΧ•Χ§Χ Χ™Χ ΧΧ Χ—Χ•Χ§Χ™Χ™Χ
 	{
 		return false;
 	}
-	return precedenceStack >= precedenceCurrent;//δηζψϊ ΰξϊ ΰε ωχψ ΰν ψξϊ δςγιτεϊ ωμ δθεχο αξηρπιϊ βαεδ ΰε ωεεδ μψξϊ δςγιτεϊ ωμ δθεχο δπεληι
+	return precedenceStack >= precedenceCurrent;//Χ”Χ—Χ–Χ¨Χª ΧΧΧª ΧΧ• Χ©Χ§Χ¨ ΧΧ Χ¨ΧΧª Χ”ΧΆΧ“Χ™Χ¤Χ•Χª Χ©Χ Χ”ΧΧ•Χ§Χ Χ‘ΧΧ—Χ΅Χ Χ™Χª Χ’Χ‘Χ•Χ” ΧΧ• Χ©Χ•Χ•Χ” ΧΧ¨ΧΧª Χ”ΧΆΧ“Χ™Χ¤Χ•Χª Χ©Χ Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™
 }
 
 
-void poppingFromStack(stack* st1, tokens currentToken, tokens* postFix, int* postFixCount)//θςπϊ λπιρδ: χψιΰδ μτςεμδ ςν ξφαις μξηρπιϊ, θεχο πεληι, ξςψκ θεχπιν, ΰιπγχρ ξςψκ θεχπιν, θςπϊ ιφιΰδ: δεφΰϊ λμ δθεχπιν ωψξϊ δςγιτεϊ ωμδν βαεδ ξδθεχο δπεληι, δλπρϊν μξςψκ δρετι εδλπρϊ δθεχο δπεληι μξηρπιϊ
+void poppingFromStack(stack* st1, tokens currentToken, tokens* postFix, int* postFixCount)//ΧΧΆΧ Χª Χ›Χ Χ™Χ΅Χ”: Χ§Χ¨Χ™ΧΧ” ΧΧ¤ΧΆΧ•ΧΧ” ΧΆΧ ΧΧ¦Χ‘Χ™ΧΆ ΧΧΧ—Χ΅Χ Χ™Χª, ΧΧ•Χ§Χ Χ Χ•Χ›Χ—Χ™, ΧΧΆΧ¨Χ ΧΧ•Χ§Χ Χ™Χ, ΧΧ™Χ Χ“Χ§Χ΅ ΧΧΆΧ¨Χ ΧΧ•Χ§Χ Χ™Χ, ΧΧΆΧ Χª Χ™Χ¦Χ™ΧΧ”: Χ”Χ•Χ¦ΧΧª Χ›Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ©Χ¨ΧΧª Χ”ΧΆΧ“Χ™Χ¤Χ•Χª Χ©ΧΧ”Χ Χ’Χ‘Χ•Χ” ΧΧ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™, Χ”Χ›Χ Χ΅ΧªΧ ΧΧΧΆΧ¨Χ Χ”Χ΅Χ•Χ¤Χ™ Χ•Χ”Χ›Χ Χ΅Χª Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ ΧΧΧ—Χ΅Χ Χ™Χª
 {
-	tokens signToken;//θεχο αξηρπιϊ
-	while (peek(st1, &signToken) && hasHigherOrEqualPrecedence(signToken, currentToken))//λμ ςεγ δξηρπιϊ μΰ ψιχδ εδθεχο αξηρπιϊ αςμ ψξϊ ςγιτεϊ ωεεδ ΰε βαεδ ξδθεχο δπεληι
+	tokens signToken;//ΧΧ•Χ§Χ Χ‘ΧΧ—Χ΅Χ Χ™Χª
+	while (peek(st1, &signToken) && hasHigherOrEqualPrecedence(signToken, currentToken))//Χ›Χ ΧΆΧ•Χ“ Χ”ΧΧ—Χ΅Χ Χ™Χª ΧΧ Χ¨Χ™Χ§Χ” Χ•Χ”ΧΧ•Χ§Χ Χ‘ΧΧ—Χ΅Χ Χ™Χª Χ‘ΧΆΧ Χ¨ΧΧª ΧΆΧ“Χ™Χ¤Χ•Χª Χ©Χ•Χ•Χ” ΧΧ• Χ’Χ‘Χ•Χ” ΧΧ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™
 	{
-		if (!pop(st1, &signToken))//δεφΰϊ δθεχο ξδξηρπιϊ
+		if (!pop(st1, &signToken))//Χ”Χ•Χ¦ΧΧª Χ”ΧΧ•Χ§Χ ΧΧ”ΧΧ—Χ΅Χ Χ™Χª
 		{
-			printf("Cannot pop from an empty stack\n");//ΰν δξηρπιϊ ψιχδ δϊελπδ ϊετρχ
+			printf("Cannot pop from an empty stack\n");//ΧΧ Χ”ΧΧ—Χ΅Χ Χ™Χª Χ¨Χ™Χ§Χ” Χ”ΧªΧ•Χ›Χ Χ” ΧªΧ•Χ¤Χ΅Χ§
 			free(st1->elements);
 			exit(ERROR_CODE);
 		}
-		postFix[*postFixCount] = signToken;//δλπρϊ δθεχο ωδεφΰ ξδξηρπιϊ μξςψκ δρετι
-		(*postFixCount)++;//δςμΰϊ ΰιπγχρ δξςψκ δρετι
+		postFix[*postFixCount] = signToken;//Χ”Χ›Χ Χ΅Χª Χ”ΧΧ•Χ§Χ Χ©Χ”Χ•Χ¦Χ ΧΧ”ΧΧ—Χ΅Χ Χ™Χª ΧΧΧΆΧ¨Χ Χ”Χ΅Χ•Χ¤Χ™
+		(*postFixCount)++;//Χ”ΧΆΧΧΧª ΧΧ™Χ Χ“Χ§Χ΅ Χ”ΧΧΆΧ¨Χ Χ”Χ΅Χ•Χ¤Χ™
 	}
 }
 
 
-tokens* InfixToPostfix(tokens* infix, int equationLength, int* postFixCount)//θςπϊ λπιρδ: χψιΰδ μτςεμδ ςν ξςψκ θεχπιν δϊημϊι, ΰεψκ δξςψκ, εΰεψκ ξςψκ δθεχπιν δρετι
+tokens* InfixToPostfix(tokens* infix, int equationLength, int* postFixCount)//ΧΧΆΧ Χª Χ›Χ Χ™Χ΅Χ”: Χ§Χ¨Χ™ΧΧ” ΧΧ¤ΧΆΧ•ΧΧ” ΧΆΧ ΧΧΆΧ¨Χ ΧΧ•Χ§Χ Χ™Χ Χ”ΧªΧ—ΧΧªΧ™, ΧΧ•Χ¨Χ Χ”ΧΧΆΧ¨Χ, Χ•ΧΧ•Χ¨Χ ΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ”Χ΅Χ•Χ¤Χ™
 {
-	tokens* postFix = malloc((2 * equationLength) * sizeof(tokens));//δχφαϊ ξχεν μξςψκ δθεχπιν δρετι
-	if (postFix == NULL)//ΰν ιω ωβιΰδ αδφαϊ δξχεν
+	tokens* postFix = malloc((2 * equationLength) * sizeof(tokens));//Χ”Χ§Χ¦Χ‘Χª ΧΧ§Χ•Χ ΧΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ”Χ΅Χ•Χ¤Χ™
+	if (postFix == NULL)//ΧΧ Χ™Χ© Χ©Χ’Χ™ΧΧ” Χ‘Χ”Χ¦Χ‘Χª Χ”ΧΧ§Χ•Χ
 	{
-		printf("Failed to allocate memory for postfix array, exiting program...\n");//δϊελπδ ϊετρχ
+		printf("Failed to allocate memory for postfix array, exiting program...\n");//Χ”ΧªΧ•Χ›Χ Χ” ΧªΧ•Χ¤Χ΅Χ§
 		exit(ERROR_CODE);
 	}
 
-	stack st1;//ιφιψϊ ξαπδ ξηρπιϊ
-	st1.elements = malloc(equationLength * sizeof(tokens));//δχφαϊ ξχεν μξηρπιϊ
-	if (st1.elements == NULL)//ΰν ιω ωβιΰδ αδφαϊ δξχεν
+	stack st1;//Χ™Χ¦Χ™Χ¨Χª ΧΧ‘Χ Χ” ΧΧ—Χ΅Χ Χ™Χª
+	st1.elements = malloc(equationLength * sizeof(tokens));//Χ”Χ§Χ¦Χ‘Χª ΧΧ§Χ•Χ ΧΧΧ—Χ΅Χ Χ™Χª
+	if (st1.elements == NULL)//ΧΧ Χ™Χ© Χ©Χ’Χ™ΧΧ” Χ‘Χ”Χ¦Χ‘Χª Χ”ΧΧ§Χ•Χ
 	{
-		printf("Failed to allocate memory for stack, exiting program...\n");//δϊελπδ ϊετρχ
+		printf("Failed to allocate memory for stack, exiting program...\n");//Χ”ΧªΧ•Χ›Χ Χ” ΧªΧ•Χ¤Χ΅Χ§
 		free(postFix);
 		exit(ERROR_CODE);
 	}
-	st1.top = -1;//δεφΰϊ δΰιπγχρ δπεληι ξδξηρπιϊ λγι μρξο ωδιΰ ψιχδ
-	st1.capacity = equationLength;//ΰεψκ δξηρπιϊ διΰ αεβμ ΰεψκ ξςψκ δθεχπιν δδϊημϊι
+	st1.top = -1;//Χ”Χ•Χ¦ΧΧª Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ”Χ Χ•Χ›Χ—Χ™ ΧΧ”ΧΧ—Χ΅Χ Χ™Χª Χ›Χ“Χ™ ΧΧ΅ΧΧ Χ©Χ”Χ™Χ Χ¨Χ™Χ§Χ”
+	st1.capacity = equationLength;//ΧΧ•Χ¨Χ Χ”ΧΧ—Χ΅Χ Χ™Χª Χ”Χ™Χ Χ‘Χ•Χ’Χ ΧΧ•Χ¨Χ ΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ”Χ”ΧªΧ—ΧΧªΧ™
 
-	*postFixCount = 0;//ΰιτερ ΰεψκ ξςψκ δθεχπιν δρετι
-	tokens signToken;//ιφιψϊ θεχο ωμ ξηρπιϊ
+	*postFixCount = 0;//ΧΧ™Χ¤Χ•Χ΅ ΧΧ•Χ¨Χ ΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ”Χ΅Χ•Χ¤Χ™
+	tokens signToken;//Χ™Χ¦Χ™Χ¨Χª ΧΧ•Χ§Χ Χ©Χ ΧΧ—Χ΅Χ Χ™Χª
 	for (int i = 0; i < equationLength; i++)
 	{
-		if (infix[i].value == NULL_TOKEN)//ΰν δθεχο δπεληι δεΰ αςμ ςψκ NULL_TOKEN 
+		if (infix[i].value == NULL_TOKEN)//ΧΧ Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ Χ‘ΧΆΧ ΧΆΧ¨Χ NULL_TOKEN 
 		{
-			continue;//δεΰ ιγεμβ
+			continue;//Χ”Χ•Χ Χ™Χ“Χ•ΧΧ’
 		}
 
-		if (infix[i].number)//ΰν δθεχο δπεληι δεΰ ξρτψ
+		if (infix[i].number)//ΧΧ Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ ΧΧ΅Χ¤Χ¨
 		{
-			postFix[*postFixCount] = infix[i];//δεΰ ιϊεερσ ιωψ μξςψκ δρετι
+			postFix[*postFixCount] = infix[i];//Χ”Χ•Χ Χ™ΧªΧ•Χ•Χ΅Χ£ Χ™Χ©Χ¨ ΧΧΧΆΧ¨Χ Χ”Χ΅Χ•Χ¤Χ™
 			(*postFixCount)++;
 		}
 		else
 		{
-			switch (infix[i].sign)//ΰν δθεχο δπεληι δεΰ ριξο
+			switch (infix[i].sign)//ΧΧ Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ Χ΅Χ™ΧΧ
 			{
 			case '+':
 			case '-':
 			case '*':
 			case '/':
-				poppingFromStack(&st1, infix[i], postFix, postFixCount);//αγιχϊ ΰν δθεχο αξηρπιϊ αςμ ςψκ ςγιτεϊ βγεμ ΰε ωεεδ μθεχο δπεληι
-				if (!push(infix[i], &st1))//γηιτϊ δθεχο δπεληι
+				poppingFromStack(&st1, infix[i], postFix, postFixCount);//Χ‘Χ“Χ™Χ§Χª ΧΧ Χ”ΧΧ•Χ§Χ Χ‘ΧΧ—Χ΅Χ Χ™Χª Χ‘ΧΆΧ ΧΆΧ¨Χ ΧΆΧ“Χ™Χ¤Χ•Χª Χ’Χ“Χ•Χ ΧΧ• Χ©Χ•Χ•Χ” ΧΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™
+				if (!push(infix[i], &st1))//Χ“Χ—Χ™Χ¤Χª Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™
 				{
 					printf("Pushing another element will result in stack overflow\n");
 					free(postFix);
@@ -243,8 +243,8 @@ tokens* InfixToPostfix(tokens* infix, int equationLength, int* postFixCount)//θς
 					exit(ERROR_CODE);
 				}
 				break;
-			case '('://ΰν δθεχο δπεληι δεΰ (
-				if (!push(infix[i], &st1))//δεΰ ιιγησ μξηρπιϊ
+			case '('://ΧΧ Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ (
+				if (!push(infix[i], &st1))//Χ”Χ•Χ Χ™Χ™Χ“Χ—Χ£ ΧΧΧ—Χ΅Χ Χ™Χª
 				{
 					printf("Pushing another element will result in stack overflow\n");
 					free(postFix);
@@ -252,27 +252,27 @@ tokens* InfixToPostfix(tokens* infix, int equationLength, int* postFixCount)//θς
 					exit(ERROR_CODE);
 				}
 				break;
-			case ')'://ΰν δθεχο δπεληι δεΰ )
-				while (peek(&st1, &signToken) && signToken.sign != '(')//λκ ςεγ δξηρπιϊ μΰ ψιχδ εδθεχο αξηρπιϊ μΰ (
+			case ')'://ΧΧ Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ )
+				while (peek(&st1, &signToken) && signToken.sign != '(')//Χ›Χ ΧΆΧ•Χ“ Χ”ΧΧ—Χ΅Χ Χ™Χª ΧΧ Χ¨Χ™Χ§Χ” Χ•Χ”ΧΧ•Χ§Χ Χ‘ΧΧ—Χ΅Χ Χ™Χª ΧΧ (
 				{
-					if (!pop(&st1, &signToken))//δθεχο ιεφΰ
+					if (!pop(&st1, &signToken))//Χ”ΧΧ•Χ§Χ Χ™Χ•Χ¦Χ
 					{
 						printf("Error: Failed to pop from stack.\n");
 						free(postFix);
 						free(st1.elements);
 						exit(ERROR_CODE);
 					}
-					postFix[(*postFixCount)++] = signToken;//ειελπρ μξςψκ δρετι
+					postFix[(*postFixCount)++] = signToken;//Χ•Χ™Χ•Χ›Χ Χ΅ ΧΧΧΆΧ¨Χ Χ”Χ΅Χ•Χ¤Χ™
 				}
-				if (st1.top == -1 || !pop(&st1, &signToken))//ΰν δβςπε μϊηιμϊ δξηρπιϊ ριξο ω ( μΰ πξφΰ
+				if (st1.top == -1 || !pop(&st1, &signToken))//ΧΧ Χ”Χ’ΧΆΧ Χ• ΧΧªΧ—Χ™ΧΧª Χ”ΧΧ—Χ΅Χ Χ™Χª Χ΅Χ™ΧΧ Χ© ( ΧΧ Χ ΧΧ¦Χ
 				{
-					printf("Error with parenthesis\n");//ϊεηζψ ωβιΰδ ωμ ρεβψιιν
+					printf("Error with parenthesis\n");//ΧªΧ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ” Χ©Χ Χ΅Χ•Χ’Χ¨Χ™Χ™Χ
 					free(postFix);
 					free(st1.elements);
 					exit(ERROR_CODE);
 				}
 				break;
-			default://αλμ ξχψδ ΰηψ ιεηζψ ωβιΰδ ωμ ϊεχο μΰ ηεχι
+			default://Χ‘Χ›Χ ΧΧ§Χ¨Χ” ΧΧ—Χ¨ Χ™Χ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ” Χ©Χ ΧªΧ•Χ§Χ ΧΧ Χ—Χ•Χ§Χ™
 				printf("Invalid token\n");
 				free(postFix);
 				free(st1.elements);
@@ -281,120 +281,120 @@ tokens* InfixToPostfix(tokens* infix, int equationLength, int* postFixCount)//θς
 		}
 	}
 
-	tokens remainToken;//ιφιψϊ θεχο ωπωΰψ αξηρπιϊ
-	while (st1.top > -1)//δεφΰϊ λμ δθεχπιν ωπωΰψε αξηρπιϊ εδλπρϊν μξςψκ δθεχπιν δρετι
+	tokens remainToken;//Χ™Χ¦Χ™Χ¨Χª ΧΧ•Χ§Χ Χ©Χ Χ©ΧΧ¨ Χ‘ΧΧ—Χ΅Χ Χ™Χª
+	while (st1.top > -1)//Χ”Χ•Χ¦ΧΧª Χ›Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ©Χ Χ©ΧΧ¨Χ• Χ‘ΧΧ—Χ΅Χ Χ™Χª Χ•Χ”Χ›Χ Χ΅ΧªΧ ΧΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ”Χ΅Χ•Χ¤Χ™
 	{
-		if (pop(&st1, &remainToken))//ΰν δξηρπιϊ μΰ ψιχδ
+		if (pop(&st1, &remainToken))//ΧΧ Χ”ΧΧ—Χ΅Χ Χ™Χª ΧΧ Χ¨Χ™Χ§Χ”
 		{
-			if (remainToken.sign == '(' || remainToken.sign == ')')//εδϊεχο ωδεφΰ δεΰ ρεβψ
+			if (remainToken.sign == '(' || remainToken.sign == ')')//Χ•Χ”ΧªΧ•Χ§Χ Χ©Χ”Χ•Χ¦Χ Χ”Χ•Χ Χ΅Χ•Χ’Χ¨
 			{
-				printf("Error with parenthesis\n");//ϊεηζψ ωβιΰδ ωμ ρεβψιιν
+				printf("Error with parenthesis\n");//ΧªΧ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ” Χ©Χ Χ΅Χ•Χ’Χ¨Χ™Χ™Χ
 				free(postFix);
 				free(st1.elements);
 				exit(ERROR_CODE);
 			}
-			postFix[*postFixCount] = remainToken;//ΰηψϊ δθεχο ιιλπρ μξςψκ δθεχπιν δρετι
+			postFix[*postFixCount] = remainToken;//ΧΧ—Χ¨Χª Χ”ΧΧ•Χ§Χ Χ™Χ™Χ›Χ Χ΅ ΧΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ”Χ΅Χ•Χ¤Χ™
 			(*postFixCount)++;
 		}
 	}
-	free(st1.elements);//ωηψεψ δξηρπιϊ
-	return postFix;//δηζψϊ ξςψκ δθεχπιν δρετι
+	free(st1.elements);//Χ©Χ—Χ¨Χ•Χ¨ Χ”ΧΧ—Χ΅Χ Χ™Χª
+	return postFix;//Χ”Χ—Χ–Χ¨Χª ΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ”Χ΅Χ•Χ¤Χ™
 }
 
 
-static int FindNumbers(int* index, char* equation)//θςπϊ λπιρδ: χψιΰδ μτςεμδ ςν ξφαις μΰιπγχρ εξςψκ, θςπϊ ιφιΰδ: δτιλϊ ψφσ ωμ θεχπιν ωμ ρτψεϊ μξρτψ ααριρ 10 δηζψϊε εςιγλεο ΰιπγχρ δξςψκ
+static int FindNumbers(int* index, char* equation)//ΧΧΆΧ Χª Χ›Χ Χ™Χ΅Χ”: Χ§Χ¨Χ™ΧΧ” ΧΧ¤ΧΆΧ•ΧΧ” ΧΆΧ ΧΧ¦Χ‘Χ™ΧΆ ΧΧΧ™Χ Χ“Χ§Χ΅ Χ•ΧΧΆΧ¨Χ, ΧΧΆΧ Χª Χ™Χ¦Χ™ΧΧ”: Χ”Χ¤Χ™Χ›Χª Χ¨Χ¦Χ£ Χ©Χ ΧΧ•Χ§Χ Χ™Χ Χ©Χ Χ΅Χ¤Χ¨Χ•Χª ΧΧΧ΅Χ¤Χ¨ Χ‘Χ‘Χ΅Χ™Χ΅ 10 Χ”Χ—Χ–Χ¨ΧªΧ• Χ•ΧΆΧ™Χ“Χ›Χ•Χ ΧΧ™Χ Χ“Χ§Χ΅ Χ”ΧΧΆΧ¨Χ
 {
 	int num = 0;
 	int i = *index;
 	int length = strlen(equation);
-	while (i < length && equation[i] >= '0' && equation[i] <= '9')//λμ ςεγ δϊε δπεληι δεΰ ξρτψ
+	while (i < length && equation[i] >= '0' && equation[i] <= '9')//Χ›Χ ΧΆΧ•Χ“ Χ”ΧªΧ• Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ ΧΧ΅Χ¤Χ¨
 	{
-		num = num * 10 + equation[i] - '0';//ιεψλα ξρτψ ααριρ 10
+		num = num * 10 + equation[i] - '0';//Χ™Χ•Χ¨Χ›Χ‘ ΧΧ΅Χ¤Χ¨ Χ‘Χ‘Χ΅Χ™Χ΅ 10
 		i++;
 	}
-	*index = i;//ςγλεο ΰιπγχρ δξςψκ
-	return num;//δηζψϊ δξρτψ
+	*index = i;//ΧΆΧ“Χ›Χ•Χ ΧΧ™Χ Χ“Χ§Χ΅ Χ”ΧΧΆΧ¨Χ
+	return num;//Χ”Χ—Χ–Χ¨Χª Χ”ΧΧ΅Χ¤Χ¨
 }
 
 
-bool isUnaryMinus(char* equation, int minus_index)//θςπϊ λπιρδ: χψιΰδ μτςεμδ ςν ξςψκ εΰιπγχρ ωμ ξιπερ, θςπϊ ιφιΰδ: δηζψϊ ΰξϊ ΰν δξρτψ ωμιμι ΰε δεΰ ξρτψ μΰηψ ριξο ξιπερ
+bool isUnaryMinus(char* equation, int minus_index)//ΧΧΆΧ Χª Χ›Χ Χ™Χ΅Χ”: Χ§Χ¨Χ™ΧΧ” ΧΧ¤ΧΆΧ•ΧΧ” ΧΆΧ ΧΧΆΧ¨Χ Χ•ΧΧ™Χ Χ“Χ§Χ΅ Χ©Χ ΧΧ™Χ Χ•Χ΅, ΧΧΆΧ Χª Χ™Χ¦Χ™ΧΧ”: Χ”Χ—Χ–Χ¨Χª ΧΧΧª ΧΧ Χ”ΧΧ΅Χ¤Χ¨ Χ©ΧΧ™ΧΧ™ ΧΧ• Χ”Χ•Χ ΧΧ΅Χ¤Χ¨ ΧΧΧ—Χ¨ Χ΅Χ™ΧΧ ΧΧ™Χ Χ•Χ΅
 {
-	if (minus_index == 0)//ΰν δξιπερ δεΰ αϊηιμϊ δξωεεΰδ ΰζ ζδ ξρτψ ωμιμι
+	if (minus_index == 0)//ΧΧ Χ”ΧΧ™Χ Χ•Χ΅ Χ”Χ•Χ Χ‘ΧªΧ—Χ™ΧΧª Χ”ΧΧ©Χ•Χ•ΧΧ” ΧΧ– Χ–Χ” ΧΧ΅Χ¤Χ¨ Χ©ΧΧ™ΧΧ™
 	{
 		return true;
 	}
 
-	int prev_index = minus_index - 1;//δωξϊ δϊε αΰιπγχρ ωμτπι δΰιπγχρ ωπιϊο
-	while (prev_index >= 0 && (equation[prev_index] == ' ' || equation[prev_index] == '\t'))//λμ ςεγ δΰιπγχρ βγεμ ξ0
+	int prev_index = minus_index - 1;//Χ”Χ©ΧΧª Χ”ΧªΧ• Χ‘ΧΧ™Χ Χ“Χ§Χ΅ Χ©ΧΧ¤Χ Χ™ Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ©Χ Χ™ΧªΧ
+	while (prev_index >= 0 && (equation[prev_index] == ' ' || equation[prev_index] == '\t'))//Χ›Χ ΧΆΧ•Χ“ Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ’Χ“Χ•Χ Χ0
 	{
-		prev_index--;//δΰιπγχρ ιψγ
+		prev_index--;//Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ™Χ¨Χ“
 	}
-	if (prev_index < 0)//ΰν δΰιπγχρ ιφΰ ξδξςψκ
+	if (prev_index < 0)//ΧΧ Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ™Χ¦Χ ΧΧ”ΧΧΆΧ¨Χ
 	{
-		return true;//δηζψϊ ΰξϊ
+		return true;//Χ”Χ—Χ–Χ¨Χª ΧΧΧª
 	}
-	char prev_char = equation[prev_index];//ΰν ξιπερ αΰ μΰηψ ριξο ξϊξθι ΰζ ζδ ξρτψ ωμιμι
+	char prev_char = equation[prev_index];//ΧΧ ΧΧ™Χ Χ•Χ΅ Χ‘Χ ΧΧΧ—Χ¨ Χ΅Χ™ΧΧ ΧΧªΧΧΧ™ ΧΧ– Χ–Χ” ΧΧ΅Χ¤Χ¨ Χ©ΧΧ™ΧΧ™
 	if (prev_char == '(' || prev_char == '+' || prev_char == '-' ||
 		prev_char == '*' || prev_char == '/')
 	{
 		return true;
 	}
-	return false;//ΰηψϊ ιεηζψ ωχψ
+	return false;//ΧΧ—Χ¨Χª Χ™Χ•Χ—Χ–Χ¨ Χ©Χ§Χ¨
 }
 
 
-static int Tokenize(tokens* tokenptr, char* equation, int* p_index, int equationlength) //θςπϊ λπιρδ: χψιΰδ μτςεμδ ςν ξςψκ θεχπιν ψιχ, ξςψκ ωμ ξωεεΰδ, ξφαις μΰιπγχρ δξςψκ ωμ δξωεεΰδ εΰεψκ δξςψκ, θςπϊ ιφιΰδ, δτιλϊ ςμ ϊε αξςψκ μθεχο ξϊξθι
+static int Tokenize(tokens* tokenptr, char* equation, int* p_index, int equationlength) //ΧΧΆΧ Χª Χ›Χ Χ™Χ΅Χ”: Χ§Χ¨Χ™ΧΧ” ΧΧ¤ΧΆΧ•ΧΧ” ΧΆΧ ΧΧΆΧ¨Χ ΧΧ•Χ§Χ Χ™Χ Χ¨Χ™Χ§, ΧΧΆΧ¨Χ Χ©Χ ΧΧ©Χ•Χ•ΧΧ”, ΧΧ¦Χ‘Χ™ΧΆ ΧΧΧ™Χ Χ“Χ§Χ΅ Χ”ΧΧΆΧ¨Χ Χ©Χ Χ”ΧΧ©Χ•Χ•ΧΧ” Χ•ΧΧ•Χ¨Χ Χ”ΧΧΆΧ¨Χ, ΧΧΆΧ Χª Χ™Χ¦Χ™ΧΧ”, Χ”Χ¤Χ™Χ›Χª ΧΆΧ ΧªΧ• Χ‘ΧΧΆΧ¨Χ ΧΧΧ•Χ§Χ ΧΧªΧΧΧ™
 {
-	int index = *p_index;//δωξϊ δΰιπγχρ δπεληι
+	int index = *p_index;//Χ”Χ©ΧΧª Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ”Χ Χ•Χ›Χ—Χ™
 
-	while (index < equationlength && (equation[index] == ' ' || equation[index] == '\t')) //λμ ςεγ δϊε δπεληι δεΰ ψεεη εδΰιπγχρ δπεληι αϊεκ δξςψκ δεΰ ιςμδ
+	while (index < equationlength && (equation[index] == ' ' || equation[index] == '\t')) //Χ›Χ ΧΆΧ•Χ“ Χ”ΧªΧ• Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ Χ¨Χ•Χ•Χ— Χ•Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ”Χ Χ•Χ›Χ—Χ™ Χ‘ΧªΧ•Χ Χ”ΧΧΆΧ¨Χ Χ”Χ•Χ Χ™ΧΆΧΧ”
 	{
 		index++;
 	}
 
-	*p_index = index;//ςγλεο δξφαις ωμ δΰιπγχρ δπεληι
+	*p_index = index;//ΧΆΧ“Χ›Χ•Χ Χ”ΧΧ¦Χ‘Χ™ΧΆ Χ©Χ Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ”Χ Χ•Χ›Χ—Χ™
 
-	if (index < equationlength) //ΰν δΰιπγχρ δπεληι δεΰ αϊεκ δξςψκ
+	if (index < equationlength) //ΧΧ Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ Χ‘ΧªΧ•Χ Χ”ΧΧΆΧ¨Χ
 	{
-		tokens t1;//ιφιψϊ θεχο
+		tokens t1;//Χ™Χ¦Χ™Χ¨Χª ΧΧ•Χ§Χ
 
-		if (equation[index] == '-' && isUnaryMinus(equation, index)) //ΰν δθεχο δπεληι δεΰ ξρτψ ωμιμι
+		if (equation[index] == '-' && isUnaryMinus(equation, index)) //ΧΧ Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ ΧΧ΅Χ¤Χ¨ Χ©ΧΧ™ΧΧ™
 		{
-			index++;//δΰιπγχρ ιςμδ
-			int start_index = index;//δωξϊ ΰιπγχρ δϊημϊι
-			int num = FindNumbers(&index, equation);//χψιΰδ μτςεμδ δξηαψϊ θεχπιν ωμ ρτψεϊ
+			index++;//Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ™ΧΆΧΧ”
+			int start_index = index;//Χ”Χ©ΧΧª ΧΧ™Χ Χ“Χ§Χ΅ Χ”ΧªΧ—ΧΧªΧ™
+			int num = FindNumbers(&index, equation);//Χ§Χ¨Χ™ΧΧ” ΧΧ¤ΧΆΧ•ΧΧ” Χ”ΧΧ—Χ‘Χ¨Χª ΧΧ•Χ§Χ Χ™Χ Χ©Χ Χ΅Χ¤Χ¨Χ•Χª
 
-			if (start_index == index) //ΰν δΰιπγχρ μΰ ςμδ αλμμ ριξο ωιω ριξο ξιπερ ψιχ
+			if (start_index == index) //ΧΧ Χ”ΧΧ™Χ Χ“Χ§Χ΅ ΧΧ ΧΆΧΧ” Χ‘Χ›ΧΧ Χ΅Χ™ΧΧ Χ©Χ™Χ© Χ΅Χ™ΧΧ ΧΧ™Χ Χ•Χ΅ Χ¨Χ™Χ§
 			{
-				printf("Input is invalid\n");//ϊεηζψ ωβιΰδ
+				printf("Input is invalid\n");//ΧªΧ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ”
 				return -1;
 			}
 
-			t1.value = -num;//ςψκ δθεχο ιδιδ δξρτψ δωμιμι
-			t1.sign = 0;//δριξο ιδιδ 0
+			t1.value = -num;//ΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ”Χ™Χ” Χ”ΧΧ΅Χ¤Χ¨ Χ”Χ©ΧΧ™ΧΧ™
+			t1.sign = 0;//Χ”Χ΅Χ™ΧΧ Χ™Χ”Χ™Χ” 0
 			t1.number = true;
-			tokenptr[*p_index] = t1;//δθεχο ιδιδ αΰιπγχρ δπεληι αξςψκ δθεχπιν
+			tokenptr[*p_index] = t1;//Χ”ΧΧ•Χ§Χ Χ™Χ”Χ™Χ” Χ‘ΧΧ™Χ Χ“Χ§Χ΅ Χ”Χ Χ•Χ›Χ—Χ™ Χ‘ΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ
 
-			for (int i = start_index; i < index; i++) //δωξϊ λμ δθεχπιν αξχεξεϊ ωδιε αδν ρτψεϊ ωδτλε μξρτψ ΰηγ μθεχπιν ωγεψωιν δϊςμξεϊ
+			for (int i = start_index; i < index; i++) //Χ”Χ©ΧΧª Χ›Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ‘ΧΧ§Χ•ΧΧ•Χª Χ©Χ”Χ™Χ• Χ‘Χ”Χ Χ΅Χ¤Χ¨Χ•Χª Χ©Χ”Χ¤Χ›Χ• ΧΧΧ΅Χ¤Χ¨ ΧΧ—Χ“ ΧΧΧ•Χ§Χ Χ™Χ Χ©Χ“Χ•Χ¨Χ©Χ™Χ Χ”ΧªΧΆΧΧΧ•Χª
 			{
 				tokenptr[i].value = NULL_TOKEN;
 				tokenptr[i].sign = 0;
 				tokenptr[i].number = false;
 			}
 
-			*p_index = index;//ςγλεο δξφαις μΰιπγχρ δπεληι
+			*p_index = index;//ΧΆΧ“Χ›Χ•Χ Χ”ΧΧ¦Χ‘Χ™ΧΆ ΧΧΧ™Χ Χ“Χ§Χ΅ Χ”Χ Χ•Χ›Χ—Χ™
 		}
-		else if (equation[index] >= '0' && equation[index] <= '9') //ΰν δϊε δπεληι δεΰ ξρτψ
+		else if (equation[index] >= '0' && equation[index] <= '9') //ΧΧ Χ”ΧªΧ• Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ ΧΧ΅Χ¤Χ¨
 		{
-			int start_index = index;//δωξϊ δΰιπγχρ δπεληι
-			int num = FindNumbers(&index, equation);//χψιΰδ μτςεμδ μηιαεψ θεχπιν ωμ ρτψεϊ μξρτψ ΰηγ
+			int start_index = index;//Χ”Χ©ΧΧª Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ”Χ Χ•Χ›Χ—Χ™
+			int num = FindNumbers(&index, equation);//Χ§Χ¨Χ™ΧΧ” ΧΧ¤ΧΆΧ•ΧΧ” ΧΧ—Χ™Χ‘Χ•Χ¨ ΧΧ•Χ§Χ Χ™Χ Χ©Χ Χ΅Χ¤Χ¨Χ•Χª ΧΧΧ΅Χ¤Χ¨ ΧΧ—Χ“
 
 			t1.value = num;
 			t1.sign = 0;
 			t1.number = true;
 			tokenptr[start_index] = t1;
 
-			for (int i = start_index + 1; i < index; i++) //δτιλϊ λμ δθεχπιν ωαδν διε ρτψεϊ ωδτλε μξρτψ ΰηγ μθεχπιν ωγεψωιν δϊςμξεϊ
+			for (int i = start_index + 1; i < index; i++) //Χ”Χ¤Χ™Χ›Χª Χ›Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ©Χ‘Χ”Χ Χ”Χ™Χ• Χ΅Χ¤Χ¨Χ•Χª Χ©Χ”Χ¤Χ›Χ• ΧΧΧ΅Χ¤Χ¨ ΧΧ—Χ“ ΧΧΧ•Χ§Χ Χ™Χ Χ©Χ“Χ•Χ¨Χ©Χ™Χ Χ”ΧªΧΆΧΧΧ•Χª
 			{
 				tokenptr[i].value = NULL_TOKEN;
 				tokenptr[i].sign = 0;
@@ -405,10 +405,10 @@ static int Tokenize(tokens* tokenptr, char* equation, int* p_index, int equation
 		}
 		else if (equation[index] == '+' || equation[index] == '-' ||
 			equation[index] == '*' || equation[index] == '/' ||
-			equation[index] == '(' || equation[index] == ')') //ΰν δθεχο δπεληι δεΰ ΰηγ ξδριξπιν δαΰιν
+			equation[index] == '(' || equation[index] == ')') //ΧΧ Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ ΧΧ—Χ“ ΧΧ”Χ΅Χ™ΧΧ Χ™Χ Χ”Χ‘ΧΧ™Χ
 		{
-			t1.value = 0;//δςψκ ιδιδ 0
-			t1.sign = equation[index];//δριξο ιδιδ δϊε δπεληι
+			t1.value = 0;//Χ”ΧΆΧ¨Χ Χ™Χ”Χ™Χ” 0
+			t1.sign = equation[index];//Χ”Χ΅Χ™ΧΧ Χ™Χ”Χ™Χ” Χ”ΧªΧ• Χ”Χ Χ•Χ›Χ—Χ™
 			t1.number = false;
 			tokenptr[index] = t1;
 
@@ -420,87 +420,87 @@ static int Tokenize(tokens* tokenptr, char* equation, int* p_index, int equation
 			return -1;
 		}
 
-		return Tokenize(tokenptr, equation, p_index, equationlength);//δηζψϊ ξςψκ δθεχπιν
+		return Tokenize(tokenptr, equation, p_index, equationlength);//Χ”Χ—Χ–Χ¨Χª ΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ
 	}
 
 	return 0;
 }
 
 
-char* CreateEquation()//θςπϊ λπιρδ: χψιΰδ μτςεμδ, θςπϊ ιφιΰδ: ιφιψϊ ξςψκ ωμ ξωεεΰδ
+char* CreateEquation()//ΧΧΆΧ Χª Χ›Χ Χ™Χ΅Χ”: Χ§Χ¨Χ™ΧΧ” ΧΧ¤ΧΆΧ•ΧΧ”, ΧΧΆΧ Χª Χ™Χ¦Χ™ΧΧ”: Χ™Χ¦Χ™Χ¨Χª ΧΧΆΧ¨Χ Χ©Χ ΧΧ©Χ•Χ•ΧΧ”
 {
-	char tempBuffer[100];//ιφιψϊ ξςψκ ζξπι
+	char tempBuffer[100];//Χ™Χ¦Χ™Χ¨Χª ΧΧΆΧ¨Χ Χ–ΧΧ Χ™
 	printf("Enter equation: \n");
-	if (fgets(tempBuffer, sizeof(tempBuffer), stdin) == NULL)//ΰν διιϊδ αςιδ αχμιθϊ χμθ
+	if (fgets(tempBuffer, sizeof(tempBuffer), stdin) == NULL)//ΧΧ Χ”Χ™Χ™ΧªΧ” Χ‘ΧΆΧ™Χ” Χ‘Χ§ΧΧ™ΧΧª Χ§ΧΧ
 	{
-		printf("Input reading failed\n");//ϊεηζψ ωβιΰδ
+		printf("Input reading failed\n");//ΧªΧ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ”
 		return NULL;
 	}
 	printf("Input reading succeeded\n");
 
 	size_t len = strlen(tempBuffer);
-	if (len > 0 && tempBuffer[len - 1] == '\n')//δτιλϊ δριξο newline
+	if (len > 0 && tempBuffer[len - 1] == '\n')//Χ”Χ¤Χ™Χ›Χª Χ”Χ΅Χ™ΧΧ newline
 	{
-		tempBuffer[len - 1] = '\0';//μριξο ρεσ ξηψεζϊ
+		tempBuffer[len - 1] = '\0';//ΧΧ΅Χ™ΧΧ Χ΅Χ•Χ£ ΧΧ—Χ¨Χ•Χ–Χª
 	}
 
-	int size = strlen(tempBuffer);//ωξιψϊ βεγμ δξηψεζϊ
-	char* equation = (char*)malloc((size + 1) * sizeof(char));//ιφιψϊ ξηψεζϊ ξωεεΰδ αβεγμ ΰεψκ δξηψεζϊ δζξπιϊ
-	if (equation == NULL)//ΰν διιϊδ αςιδ αδχφαϊ ζιλψεο
+	int size = strlen(tempBuffer);//Χ©ΧΧ™Χ¨Χª Χ’Χ•Χ“Χ Χ”ΧΧ—Χ¨Χ•Χ–Χª
+	char* equation = (char*)malloc((size + 1) * sizeof(char));//Χ™Χ¦Χ™Χ¨Χª ΧΧ—Χ¨Χ•Χ–Χª ΧΧ©Χ•Χ•ΧΧ” Χ‘Χ’Χ•Χ“Χ ΧΧ•Χ¨Χ Χ”ΧΧ—Χ¨Χ•Χ–Χª Χ”Χ–ΧΧ Χ™Χª
+	if (equation == NULL)//ΧΧ Χ”Χ™Χ™ΧªΧ” Χ‘ΧΆΧ™Χ” Χ‘Χ”Χ§Χ¦Χ‘Χª Χ–Χ™Χ›Χ¨Χ•Χ
 	{
-		printf("Memory allocation failed\n");//ϊεηζψ ωβιΰδ
+		printf("Memory allocation failed\n");//ΧªΧ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ”
 		return NULL;
 	}
 
-	strcpy(equation, tempBuffer);//ΰηψϊ δξηψεζϊ ξδξςψκ δζξπι ϊεςϊχ μξςψκ δηγω
-	printf("Equation entered: %s\n", equation);//δγτρϊ δξηψεζϊ ωπχμθδ
-	return equation;//δηζψϊ δξηψεζϊ
+	strcpy(equation, tempBuffer);//ΧΧ—Χ¨Χª Χ”ΧΧ—Χ¨Χ•Χ–Χª ΧΧ”ΧΧΆΧ¨Χ Χ”Χ–ΧΧ Χ™ ΧªΧ•ΧΆΧªΧ§ ΧΧΧΆΧ¨Χ Χ”Χ—Χ“Χ©
+	printf("Equation entered: %s\n", equation);//Χ”Χ“Χ¤Χ΅Χª Χ”ΧΧ—Χ¨Χ•Χ–Χª Χ©Χ Χ§ΧΧΧ”
+	return equation;//Χ”Χ—Χ–Χ¨Χª Χ”ΧΧ—Χ¨Χ•Χ–Χª
 }
 
 
 int main()
 {
-	char* equation = CreateEquation();//ιφιψϊ ξςψκ ξωεεΰδ
-	if (equation == NULL)//ΰν διιϊδ αςιδ αδχφαϊ ζιλψεο
+	char* equation = CreateEquation();//Χ™Χ¦Χ™Χ¨Χª ΧΧΆΧ¨Χ ΧΧ©Χ•Χ•ΧΧ”
+	if (equation == NULL)//ΧΧ Χ”Χ™Χ™ΧªΧ” Χ‘ΧΆΧ™Χ” Χ‘Χ”Χ§Χ¦Χ‘Χª Χ–Χ™Χ›Χ¨Χ•Χ
 	{
-		printf("Failed to create equation.\n");//ϊεηζψ ωβιΰδ
+		printf("Failed to create equation.\n");//ΧªΧ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ”
 		return -1;
 	}
 	printf("Memory allocation succeeded for string\n");
 
-	int equationlength = strlen(equation);//ωξιψϊ ΰεψκ δξηψεζϊ
-	tokens* t1 = (tokens*)malloc(equationlength * sizeof(tokens));//ιφιψϊ ξςψκ θεχπιν αδϊΰν μΰεψκ ξςψκ δξωεεΰδ
-	if (t1 == NULL)//ΰν διιϊδ αςιδ αδχφαϊ δζιλψεο
+	int equationlength = strlen(equation);//Χ©ΧΧ™Χ¨Χª ΧΧ•Χ¨Χ Χ”ΧΧ—Χ¨Χ•Χ–Χª
+	tokens* t1 = (tokens*)malloc(equationlength * sizeof(tokens));//Χ™Χ¦Χ™Χ¨Χª ΧΧΆΧ¨Χ ΧΧ•Χ§Χ Χ™Χ Χ‘Χ”ΧªΧΧ ΧΧΧ•Χ¨Χ ΧΧΆΧ¨Χ Χ”ΧΧ©Χ•Χ•ΧΧ”
+	if (t1 == NULL)//ΧΧ Χ”Χ™Χ™ΧªΧ” Χ‘ΧΆΧ™Χ” Χ‘Χ”Χ§Χ¦Χ‘Χª Χ”Χ–Χ™Χ›Χ¨Χ•Χ
 	{
-		printf("Memory allocation failed\n");//ϊεηζψ ωβιΰδ
+		printf("Memory allocation failed\n");//ΧªΧ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ”
 		free(equation);
 		return -1;
 	}
 	printf("Memory allocation succeeded for tokens\n");
 
-	for (int i = 0; i < equationlength; i++)//ΰιτερ ξςψκ δθεχπιν
+	for (int i = 0; i < equationlength; i++)//ΧΧ™Χ¤Χ•Χ΅ ΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ
 	{
 		t1[i].value = NULL_TOKEN;
 		t1[i].sign = 0;
 		t1[i].number = false;
 	}
 
-	int index = 0;//ΰιπγχρ δϊημϊι
-	int answer = Tokenize(t1, equation, &index, equationlength);//ξιμει ξςψκ δθεχπιν
+	int index = 0;//ΧΧ™Χ Χ“Χ§Χ΅ Χ”ΧªΧ—ΧΧªΧ™
+	int answer = Tokenize(t1, equation, &index, equationlength);//ΧΧ™ΧΧ•Χ™ ΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ
 
-	if (answer != 0)//ΰν δεηζψ χεγ ωβιΰδ
+	if (answer != 0)//ΧΧ Χ”Χ•Χ—Χ–Χ¨ Χ§Χ•Χ“ Χ©Χ’Χ™ΧΧ”
 	{
-		printf("One of the tokens is invalid.\n");//ϊεηζψ ωβιΰδ
+		printf("One of the tokens is invalid.\n");//ΧªΧ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ”
 		free(equation);
 		free(t1);
 		return -1;
 	}
 	printf("Successfully tokenized the string\n");
 
-	int postFixCount;//ιφιψϊ ΰιπγχρ ξςψκ ρετι
-	tokens* postFix = InfixToPostfix(t1, equationlength, &postFixCount);//ξιμει δξςψκ δρετι
+	int postFixCount;//Χ™Χ¦Χ™Χ¨Χª ΧΧ™Χ Χ“Χ§Χ΅ ΧΧΆΧ¨Χ Χ΅Χ•Χ¤Χ™
+	tokens* postFix = InfixToPostfix(t1, equationlength, &postFixCount);//ΧΧ™ΧΧ•Χ™ Χ”ΧΧΆΧ¨Χ Χ”Χ΅Χ•Χ¤Χ™
 
-	for (int i = 0; i < postFixCount; i++)//δγτρϊ δξςψκ δρετι
+	for (int i = 0; i < postFixCount; i++)//Χ”Χ“Χ¤Χ΅Χª Χ”ΧΧΆΧ¨Χ Χ”Χ΅Χ•Χ¤Χ™
 	{
 		if (postFix[i].number)
 		{
