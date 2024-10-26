@@ -45,6 +45,7 @@ For Visual Studio/Code
 
 ## Usage
 Once the Math Parser is running, you can input mathematical expressions directly. For example:
+
 Input: 3 + 5 * (2 - 8) Output: -27
 
 Input: (10 + 2) * 3 Output: 36
