@@ -51,17 +51,17 @@ Input: 3 + 5 * (2 - 8) Output: -27
 Input: (10 + 2) * 3 Output: 36
 
 ## What's Next
-The Math Parser is just the beginning! Here are some exciting features planned for future development:
+In the future, I'd like to add these features:
 
-- **File Scanning**: Enable the parser to read mathematical expressions from a file. This will allow users to input multiple expressions at once, making it easier to handle larger calculations or batch processing.
+- **File Scanning**: Enable the parser to read mathematical expressions from a file. This will allow users to input expressions via files instead of using the command line.
 
-- **Print Options**: Implement functionality to format and print results in a more user-friendly way. This could include options for printing expressions with proper notation or saving outputs to a file for easy sharing.
+- **Print Options**: Implement functionality to format and print results in a more user-friendly way. This could include options for displaying expressions with proper notation or saving outputs to a file.
 
 - **Error Handling Enhancements**: Improve error detection and user feedback for invalid inputs, helping users understand what went wrong and how to fix it.
 
-- **Extended Functionality**: Consider adding support for more advanced mathematical functions, such as trigonometric functions, exponentiation, and logarithms.
+- **Extended Functionality**: Consider adding support for more advanced mathematical functions, such as algebraic operations.
 
-- **Graphical User Interface (GUI)**: Explore the possibility of creating a GUI for the Math Parser to enhance user experience and accessibility.
+- **Graphical User Interface (GUI)**: Find a solution to providing a more user-friendly graphical interface for interaction, rather than relying solely on the command line or IDE.
 
 
 
