@@ -8,7 +8,7 @@ Hope you’d like it!
 
 ## Features
 - Tokenizes mathematical expressions
-- Supports basic operations: addition, subtraction, multiplication, and division
+- Supports basic operations: addition, subtraction, multiplication, division as well as parentheses behavior
 - Converts infix expressions to postfix notation
 - Evaluates postfix expressions
 - Dynamic memory management for arrays
