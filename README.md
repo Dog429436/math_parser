@@ -10,6 +10,9 @@ The Math Parser is a C program designed to tokenize and evaluate mathematical ex
 - Evaluates postfix expressions
 - Dynamic memory management for arrays
 
+## prerequisites:
+ - gcc compiler/ visual stuido / code
+
 ## Installation
 To build and run the Math Parser, follow these steps:
 
@@ -20,3 +23,21 @@ To build and run the Math Parser, follow these steps:
 2. Navigate to the project directory:
    ```bash
    cd math_parser
+
+- For gcc compiler
+
+3. Compile the source code:
+   ```bash
+   gcc -o math_parser math_parser.c
+
+4. Run the program::
+   ```bash
+   ./math_parser
+
+- For visual studio/ code
+
+3. Load the math_parser source and head files:
+
+4. Run the program
+  
+
