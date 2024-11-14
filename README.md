@@ -45,12 +45,12 @@ For Visual Studio/Code
 
 ## Usage
 Once the Math Parser is running, you can input mathematical expressions directly You can choose between two modes: Default and Verbose. 
-## Defualt mode:
+## Defualt mode
 in this mode the output will be shown without any process indicators
 ## Example:
 Enter equation: 3 + 5 * (2 - 8)
 Result: -27
-## Verbose mode (-v):
+## Verbose mode (-v)
    this mode will show the parser processing stages such as:
    - Input status
    - Memory allocation status
