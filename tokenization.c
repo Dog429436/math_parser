@@ -2,7 +2,7 @@
 #include "math_parser.h"
 #include "tokenization.h"
 #include <stdio.h>
-#include <string>
+#include <string.h>
 #include <stdbool.h>
 
 int Tokenize(tokens* tokenptr, char* equation, int* p_index, int equationlength) //טענת כניסה: קריאה לפעולה עם מערך טוקנים ריק, מערך של משוואה, מצביע לאינדקס המערך של המשוואה ואורך המערך, טענת יציאה, הפיכת על תו במערך לטוקן מתמטי
