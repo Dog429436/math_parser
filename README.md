@@ -48,27 +48,27 @@ Once the Math Parser is running, you can input mathematical expressions directly
 ## Defualt mode
 in this mode the output will be shown without any process indicators
 ## Example:
-Enter equation: 3 + 5 * (2 - 8)
+Enter equation: 3 + 5 * (2 - 8)  
 Result: -27
 ## Verbose mode (-v)
-   this mode will show the parser processing stages such as:
-   - Input status
-   - Memory allocation status
-   - Tokenization status
-   - Postfix notation
+   this mode will show the parser processing stages such as:  
+   - Input status  
+   - Memory allocation status  
+   - Tokenization status  
+   - Postfix notation  
 
 ## Example (Linux/GCC):
 ./math_parser -v
 
 ## Output:
-Enter equation: 3 + 5 * (2 - 8)
-Input reading succeeded
-Equation entered: 3 + 5 * (2 - 8)
-Memory allocation succeeded for string
-Memory allocation succeeded for tokens
-Successfully tokenized the string
-Postfix notation: 3528-*+
-Result: -27
+Enter equation: 3 + 5 * (2 - 8)  
+Input reading succeeded  
+Equation entered: 3 + 5 * (2 - 8)  
+Memory allocation succeeded for string  
+Memory allocation succeeded for tokens  
+Successfully tokenized the string  
+Postfix notation: 3528-*+  
+Result: -27  
 
 ## What's Next
 In the future, I'd like to add these features:
