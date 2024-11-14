@@ -31,7 +31,7 @@ For GCC Compiler
 
 3. Compile the source code:
    ```bash
-   gcc -o math_parser math_parser.c
+   gcc -g main.c tokenization.c stack.c numeric_operations.c -o math_parser
 
 4. Run the program::
    ```bash
@@ -44,11 +44,27 @@ For Visual Studio/Code
 4. Build and run the program using your IDE's functionality.
 
 ## Usage
-Once the Math Parser is running, you can input mathematical expressions directly. For example:
-
-Input: 3 + 5 * (2 - 8) Output: -27
-
-Input: (10 + 2) * 3 Output: 36
+Once the Math Parser is running, you can input mathematical expressions directly if you want to use verbose mode enter -v: 
+Defualt mode: 
+   Enter equation: 3 + 5 * (2 - 8)
+   Result: -27
+Verbose mode (-v):
+   this mode will allow you to view the parser processing stages such as:
+   - Input status
+   - Memory allocation status
+   - Tokenization status
+   - Postfix notation
+Example in linux gcc:
+   ./math_parser -v
+output:
+   Enter equation: 3 + 5 * (2 - 8)
+Input reading succeeded
+Equation entered: 3 + 5 * (2 - 8)
+Memory allocation succeeded for string
+Memory allocation succeeded for tokens
+Successfully tokenized the string
+Postfix notation: 3528-*+
+Result: -27
 
 ## What's Next
 In the future, I'd like to add these features:
