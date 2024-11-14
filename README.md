@@ -45,9 +45,9 @@ For Visual Studio/Code
 
 ## Usage
 Once the Math Parser is running, you can input mathematical expressions directly if you want to use verbose mode enter -v: 
-- Defualt mode: 
-   Enter equation: 3 + 5 * (2 - 8)
-   Result: -27
+- Defualt mode:
+Enter equation: 3 + 5 * (2 - 8)
+Result: -27
 - Verbose mode (-v):
    this mode will allow you to view the parser processing stages such as:
    - Input status
