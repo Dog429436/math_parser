@@ -44,8 +44,8 @@ For Visual Studio/Code
 4. Build and run the program using your IDE's functionality.
 
 ## Usage
-Once the Math Parser is running, you can input mathematical expressions directly if you want to use verbose mode enter -v: 
-- Defualt mode:
+Once the Math Parser is running, you can input mathematical expressions directly You can choose between two modes: Default and Verbose. 
+## Defualt mode:
 Enter equation: 3 + 5 * (2 - 8)
 Result: -27
 - Verbose mode (-v):
@@ -57,7 +57,7 @@ Result: -27
 Example in linux gcc:
    ./math_parser -v
 output:
-   Enter equation: 3 + 5 * (2 - 8)
+Enter equation: 3 + 5 * (2 - 8)
 Input reading succeeded
 Equation entered: 3 + 5 * (2 - 8)
 Memory allocation succeeded for string
