@@ -44,7 +44,7 @@ For Visual Studio/Code
 4. Build and run the program using your IDE's functionality.
 
 ## Usage
-Once the Math Parser is running, you can input mathematical expressions directly You can choose between two modes: Default and Verbose. 
+Once the Math Parser is running, you can input mathematical expressions directly. You can choose between two modes: Default and Verbose. 
 ## Defualt mode
 in this mode the output will be shown without any process indicators
 ## Example:
