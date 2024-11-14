@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS //ξΰχψε δξΰτωψ ωιξεω ατεπχφιεϊ μΰ αθεηεϊ
+#define _CRT_SECURE_NO_WARNINGS //ΧΧΧ§Χ¨Χ• Χ”ΧΧΧ¤Χ©Χ¨ Χ©Χ™ΧΧ•Χ© Χ‘Χ¤Χ•Χ Χ§Χ¦Χ™Χ•Χª ΧΧ Χ‘ΧΧ•Χ—Χ•Χª
 #include "math_parser.h" 
 #include "tokenization.h"
 #include "stack.h"
@@ -8,40 +8,40 @@
 #include <string.h>
 #include <stdbool.h>
 
-void poppingFromStack(stack* st1, tokens currentToken, tokens* postFix, int* postFixCount)//θςπϊ λπιρδ: χψιΰδ μτςεμδ ςν ξφαις μξηρπιϊ, θεχο πεληι, ξςψκ θεχπιν, ΰιπγχρ ξςψκ θεχπιν, θςπϊ ιφιΰδ: δεφΰϊ λμ δθεχπιν ωψξϊ δςγιτεϊ ωμδν βαεδ ξδθεχο δπεληι, δλπρϊν μξςψκ δρετι εδλπρϊ δθεχο δπεληι μξηρπιϊ
+void poppingFromStack(stack* st1, tokens currentToken, tokens* postFix, int* postFixCount)//ΧΧΆΧ Χª Χ›Χ Χ™Χ΅Χ”: Χ§Χ¨Χ™ΧΧ” ΧΧ¤ΧΆΧ•ΧΧ” ΧΆΧ ΧΧ¦Χ‘Χ™ΧΆ ΧΧΧ—Χ΅Χ Χ™Χª, ΧΧ•Χ§Χ Χ Χ•Χ›Χ—Χ™, ΧΧΆΧ¨Χ ΧΧ•Χ§Χ Χ™Χ, ΧΧ™Χ Χ“Χ§Χ΅ ΧΧΆΧ¨Χ ΧΧ•Χ§Χ Χ™Χ, ΧΧΆΧ Χª Χ™Χ¦Χ™ΧΧ”: Χ”Χ•Χ¦ΧΧª Χ›Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ©Χ¨ΧΧª Χ”ΧΆΧ“Χ™Χ¤Χ•Χª Χ©ΧΧ”Χ Χ’Χ‘Χ•Χ” ΧΧ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™, Χ”Χ›Χ Χ΅ΧªΧ ΧΧΧΆΧ¨Χ Χ”Χ΅Χ•Χ¤Χ™ Χ•Χ”Χ›Χ Χ΅Χª Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ ΧΧΧ—Χ΅Χ Χ™Χª
 {
-	tokens signToken;//θεχο αξηρπιϊ
-	while (peek(st1, &signToken) && hasHigherOrEqualPrecedence(signToken, currentToken))//λμ ςεγ δξηρπιϊ μΰ ψιχδ εδθεχο αξηρπιϊ αςμ ψξϊ ςγιτεϊ ωεεδ ΰε βαεδ ξδθεχο δπεληι
+	tokens signToken;//ΧΧ•Χ§Χ Χ‘ΧΧ—Χ΅Χ Χ™Χª
+	while (peek(st1, &signToken) && hasHigherOrEqualPrecedence(signToken, currentToken))//Χ›Χ ΧΆΧ•Χ“ Χ”ΧΧ—Χ΅Χ Χ™Χª ΧΧ Χ¨Χ™Χ§Χ” Χ•Χ”ΧΧ•Χ§Χ Χ‘ΧΧ—Χ΅Χ Χ™Χª Χ‘ΧΆΧ Χ¨ΧΧª ΧΆΧ“Χ™Χ¤Χ•Χª Χ©Χ•Χ•Χ” ΧΧ• Χ’Χ‘Χ•Χ” ΧΧ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™
 	{
-		if (!pop(st1, &signToken))//δεφΰϊ δθεχο ξδξηρπιϊ
+		if (!pop(st1, &signToken))//Χ”Χ•Χ¦ΧΧª Χ”ΧΧ•Χ§Χ ΧΧ”ΧΧ—Χ΅Χ Χ™Χª
 		{
-			printf("Cannot pop from an empty stack\n");//ΰν δξηρπιϊ ψιχδ δϊελπδ ϊετρχ
+			printf("Cannot pop from an empty stack\n");//ΧΧ Χ”ΧΧ—Χ΅Χ Χ™Χª Χ¨Χ™Χ§Χ” Χ”ΧªΧ•Χ›Χ Χ” ΧªΧ•Χ¤Χ΅Χ§
 			free(st1->elements);
 			exit(ERROR_CODE);
 		}
-		postFix[*postFixCount] = signToken;//δλπρϊ δθεχο ωδεφΰ ξδξηρπιϊ μξςψκ δρετι
-		(*postFixCount)++;//δςμΰϊ ΰιπγχρ δξςψκ δρετι
+		postFix[*postFixCount] = signToken;//Χ”Χ›Χ Χ΅Χª Χ”ΧΧ•Χ§Χ Χ©Χ”Χ•Χ¦Χ ΧΧ”ΧΧ—Χ΅Χ Χ™Χª ΧΧΧΆΧ¨Χ Χ”Χ΅Χ•Χ¤Χ™
+		(*postFixCount)++;//Χ”ΧΆΧΧΧª ΧΧ™Χ Χ“Χ§Χ΅ Χ”ΧΧΆΧ¨Χ Χ”Χ΅Χ•Χ¤Χ™
 	}
 }
 
-int parser(tokens* postFix, int postFixLength)//θςπϊ λπιρδ: χψιΰδ μτςεμδ ςν ξςψκ ρετι εβεγμ ξςψκ, θςπϊ ιφιΰδ: δηζψϊ ςψκ ωμ δξωεεΰδ
+int parser(tokens* postFix, int postFixLength)//ΧΧΆΧ Χª Χ›Χ Χ™Χ΅Χ”: Χ§Χ¨Χ™ΧΧ” ΧΧ¤ΧΆΧ•ΧΧ” ΧΆΧ ΧΧΆΧ¨Χ Χ΅Χ•Χ¤Χ™ Χ•Χ’Χ•Χ“Χ ΧΧΆΧ¨Χ, ΧΧΆΧ Χª Χ™Χ¦Χ™ΧΧ”: Χ”Χ—Χ–Χ¨Χª ΧΆΧ¨Χ Χ©Χ Χ”ΧΧ©Χ•Χ•ΧΧ”
 {
-	stack numbers;//ιφιψϊ ξηρπιϊ μξρτψιν
+	stack numbers;//Χ™Χ¦Χ™Χ¨Χª ΧΧ—Χ΅Χ Χ™Χª ΧΧΧ΅Χ¤Χ¨Χ™Χ
 	int num1 = 0, num2 = 0;
-	numbers.elements = malloc(postFixLength * sizeof(tokens));//δχφαϊ ζιλψεο μξςψκ δξηρπιϊ
-	if (numbers.elements == NULL)//ΰν ιω αςιδ αδχφαϊ δζιλψεο
+	numbers.elements = malloc(postFixLength * sizeof(tokens));//Χ”Χ§Χ¦Χ‘Χª Χ–Χ™Χ›Χ¨Χ•Χ ΧΧΧΆΧ¨Χ Χ”ΧΧ—Χ΅Χ Χ™Χª
+	if (numbers.elements == NULL)//ΧΧ Χ™Χ© Χ‘ΧΆΧ™Χ” Χ‘Χ”Χ§Χ¦Χ‘Χª Χ”Χ–Χ™Χ›Χ¨Χ•Χ
 	{
-		printf("Memory allocation failed\n");//ϊεηζψ ωβιΰδ
+		printf("Memory allocation failed\n");//ΧªΧ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ”
 		return 1;
 	}
 	numbers.capacity = postFixLength;
 	numbers.top = -1;
 	tokens currentToken;
-	for (int i = 0; i < postFixLength; i++)//ξςαψ ςμ δξςψκ δρετι εηιωεα δςψκ
+	for (int i = 0; i < postFixLength; i++)//ΧΧΆΧ‘Χ¨ ΧΆΧ Χ”ΧΧΆΧ¨Χ Χ”Χ΅Χ•Χ¤Χ™ Χ•Χ—Χ™Χ©Χ•Χ‘ Χ”ΧΆΧ¨Χ
 	{
-		if (postFix[i].number)//ΰν δθεχο δπεληι δεΰ ξρτψ
+		if (postFix[i].number)//ΧΧ Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ ΧΧ΅Χ¤Χ¨
 		{
-			if (!push(postFix[i], &numbers))//δεΰ ιγησ μξηρπιϊ
+			if (!push(postFix[i], &numbers))//Χ”Χ•Χ Χ™Χ“Χ—Χ£ ΧΧΧ—Χ΅Χ Χ™Χª
 			{
 				printf("The stack is full\n");
 				free(numbers.elements);
@@ -51,7 +51,7 @@ int parser(tokens* postFix, int postFixLength)//θςπϊ λπιρδ: χψιΰδ μτςεμδ ςν ξςψκ
 		}
 		else
 		{
-			if (!pop(&numbers, &currentToken))//ΰν δθεχο δπεληι δεΰ ριξο
+			if (!pop(&numbers, &currentToken))//ΧΧ Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ Χ΅Χ™ΧΧ
 			{
 				printf("The stack is empty\n");
 				free(numbers.elements);
@@ -59,9 +59,9 @@ int parser(tokens* postFix, int postFixLength)//θςπϊ λπιρδ: χψιΰδ μτςεμδ ςν ξςψκ
 			}
 			num2 = currentToken.value;
 
-			if (!pop(&numbers, &currentToken))//ωπι δξρτψιν δΰηψεπιν ιφΰε ξδξηρπιϊ
+			if (!pop(&numbers, &currentToken))//Χ©Χ Χ™ Χ”ΧΧ΅Χ¤Χ¨Χ™Χ Χ”ΧΧ—Χ¨Χ•Χ Χ™Χ Χ™Χ¦ΧΧ• ΧΧ”ΧΧ—Χ΅Χ Χ™Χª
 			{
-				printf("The stack is empty\n");//ΰν ΰιο ϊεηζψ ωβιΰδ
+				printf("The stack is empty\n");//ΧΧ ΧΧ™Χ ΧªΧ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ”
 				free(numbers.elements);
 				return -1;
 			}
@@ -90,7 +90,7 @@ int parser(tokens* postFix, int postFixLength)//θςπϊ λπιρδ: χψιΰδ μτςεμδ ςν ξςψκ
 			resultToken.value = num1;
 			resultToken.sign = 0;
 			resultToken.number = true;
-			if (!push(resultToken, &numbers))//γηιτϊ θεχο δϊεφΰδ μξηρπιϊ
+			if (!push(resultToken, &numbers))//Χ“Χ—Χ™Χ¤Χª ΧΧ•Χ§Χ Χ”ΧªΧ•Χ¦ΧΧ” ΧΧΧ—Χ΅Χ Χ™Χª
 			{
 				printf("The stack is full\n");
 				free(numbers.elements);
@@ -99,61 +99,61 @@ int parser(tokens* postFix, int postFixLength)//θςπϊ λπιρδ: χψιΰδ μτςεμδ ςν ξςψκ
 
 		}
 	}
-	if (!pop(&numbers, &currentToken))//δεφΰϊ θεχο δϊεφΰδ ξδξηρπιϊ
+	if (!pop(&numbers, &currentToken))//Χ”Χ•Χ¦ΧΧª ΧΧ•Χ§Χ Χ”ΧªΧ•Χ¦ΧΧ” ΧΧ”ΧΧ—Χ΅Χ Χ™Χª
 	{
-		printf("Invalid equation\n");//ΰν δξηρπιϊ ψιχδ ϊεηζψ ωβιΰδ
+		printf("Invalid equation\n");//ΧΧ Χ”ΧΧ—Χ΅Χ Χ™Χª Χ¨Χ™Χ§Χ” ΧªΧ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ”
 		free(numbers.elements);
 		return 1;
 	}
 	free(numbers.elements);
-	return currentToken.value;//δηζψϊ δςψκ δρετι
+	return currentToken.value;//Χ”Χ—Χ–Χ¨Χª Χ”ΧΆΧ¨Χ Χ”Χ΅Χ•Χ¤Χ™
 
 }
 
-tokens* InfixToPostfix(tokens* infix, int equationLength, int* postFixCount)//θςπϊ λπιρδ: χψιΰδ μτςεμδ ςν ξςψκ θεχπιν δϊημϊι, ΰεψκ δξςψκ, εΰεψκ ξςψκ δθεχπιν δρετι
+tokens* InfixToPostfix(tokens* infix, int equationLength, int* postFixCount)//ΧΧΆΧ Χª Χ›Χ Χ™Χ΅Χ”: Χ§Χ¨Χ™ΧΧ” ΧΧ¤ΧΆΧ•ΧΧ” ΧΆΧ ΧΧΆΧ¨Χ ΧΧ•Χ§Χ Χ™Χ Χ”ΧªΧ—ΧΧªΧ™, ΧΧ•Χ¨Χ Χ”ΧΧΆΧ¨Χ, Χ•ΧΧ•Χ¨Χ ΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ”Χ΅Χ•Χ¤Χ™
 {
-	tokens* postFix = malloc((2 * equationLength) * sizeof(tokens));//δχφαϊ ξχεν μξςψκ δθεχπιν δρετι
-	if (postFix == NULL)//ΰν ιω ωβιΰδ αδφαϊ δξχεν
+	tokens* postFix = malloc((2 * equationLength) * sizeof(tokens));//Χ”Χ§Χ¦Χ‘Χª ΧΧ§Χ•Χ ΧΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ”Χ΅Χ•Χ¤Χ™
+	if (postFix == NULL)//ΧΧ Χ™Χ© Χ©Χ’Χ™ΧΧ” Χ‘Χ”Χ¦Χ‘Χª Χ”ΧΧ§Χ•Χ
 	{
-		printf("Failed to allocate memory for postfix array, exiting program...\n");//δϊελπδ ϊετρχ
+		printf("Failed to allocate memory for postfix array, exiting program...\n");//Χ”ΧªΧ•Χ›Χ Χ” ΧªΧ•Χ¤Χ΅Χ§
 		exit(ERROR_CODE);
 	}
 
-	stack st1;//ιφιψϊ ξαπδ ξηρπιϊ
-	st1.elements = malloc(equationLength * sizeof(tokens));//δχφαϊ ξχεν μξηρπιϊ
-	if (st1.elements == NULL)//ΰν ιω ωβιΰδ αδφαϊ δξχεν
+	stack st1;//Χ™Χ¦Χ™Χ¨Χª ΧΧ‘Χ Χ” ΧΧ—Χ΅Χ Χ™Χª
+	st1.elements = malloc(equationLength * sizeof(tokens));//Χ”Χ§Χ¦Χ‘Χª ΧΧ§Χ•Χ ΧΧΧ—Χ΅Χ Χ™Χª
+	if (st1.elements == NULL)//ΧΧ Χ™Χ© Χ©Χ’Χ™ΧΧ” Χ‘Χ”Χ¦Χ‘Χª Χ”ΧΧ§Χ•Χ
 	{
-		printf("Failed to allocate memory for stack, exiting program...\n");//δϊελπδ ϊετρχ
+		printf("Failed to allocate memory for stack, exiting program...\n");//Χ”ΧªΧ•Χ›Χ Χ” ΧªΧ•Χ¤Χ΅Χ§
 		free(postFix);
 		exit(ERROR_CODE);
 	}
-	st1.top = -1;//δεφΰϊ δΰιπγχρ δπεληι ξδξηρπιϊ λγι μρξο ωδιΰ ψιχδ
-	st1.capacity = equationLength;//ΰεψκ δξηρπιϊ διΰ αεβμ ΰεψκ ξςψκ δθεχπιν δδϊημϊι
+	st1.top = -1;//Χ”Χ•Χ¦ΧΧª Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ”Χ Χ•Χ›Χ—Χ™ ΧΧ”ΧΧ—Χ΅Χ Χ™Χª Χ›Χ“Χ™ ΧΧ΅ΧΧ Χ©Χ”Χ™Χ Χ¨Χ™Χ§Χ”
+	st1.capacity = equationLength;//ΧΧ•Χ¨Χ Χ”ΧΧ—Χ΅Χ Χ™Χª Χ”Χ™Χ Χ‘Χ•Χ’Χ ΧΧ•Χ¨Χ ΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ”Χ”ΧªΧ—ΧΧªΧ™
 
-	*postFixCount = 0;//ΰιτερ ΰεψκ ξςψκ δθεχπιν δρετι
-	tokens signToken;//ιφιψϊ θεχο ωμ ξηρπιϊ
+	*postFixCount = 0;//ΧΧ™Χ¤Χ•Χ΅ ΧΧ•Χ¨Χ ΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ”Χ΅Χ•Χ¤Χ™
+	tokens signToken;//Χ™Χ¦Χ™Χ¨Χª ΧΧ•Χ§Χ Χ©Χ ΧΧ—Χ΅Χ Χ™Χª
 	for (int i = 0; i < equationLength; i++)
 	{
-		if (infix[i].value == NULL_TOKEN)//ΰν δθεχο δπεληι δεΰ αςμ ςψκ NULL_TOKEN 
+		if (infix[i].value == NULL_TOKEN)//ΧΧ Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ Χ‘ΧΆΧ ΧΆΧ¨Χ NULL_TOKEN 
 		{
-			continue;//δεΰ ιγεμβ
+			continue;//Χ”Χ•Χ Χ™Χ“Χ•ΧΧ’
 		}
 
-		if (infix[i].number)//ΰν δθεχο δπεληι δεΰ ξρτψ
+		if (infix[i].number)//ΧΧ Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ ΧΧ΅Χ¤Χ¨
 		{
-			postFix[*postFixCount] = infix[i];//δεΰ ιϊεερσ ιωψ μξςψκ δρετι
+			postFix[*postFixCount] = infix[i];//Χ”Χ•Χ Χ™ΧªΧ•Χ•Χ΅Χ£ Χ™Χ©Χ¨ ΧΧΧΆΧ¨Χ Χ”Χ΅Χ•Χ¤Χ™
 			(*postFixCount)++;
 		}
 		else
 		{
-			switch (infix[i].sign)//ΰν δθεχο δπεληι δεΰ ριξο
+			switch (infix[i].sign)//ΧΧ Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ Χ΅Χ™ΧΧ
 			{
 			case '+':
 			case '-':
 			case '*':
 			case '/':
-				poppingFromStack(&st1, infix[i], postFix, postFixCount);//αγιχϊ ΰν δθεχο αξηρπιϊ αςμ ςψκ ςγιτεϊ βγεμ ΰε ωεεδ μθεχο δπεληι
-				if (!push(infix[i], &st1))//γηιτϊ δθεχο δπεληι
+				poppingFromStack(&st1, infix[i], postFix, postFixCount);//Χ‘Χ“Χ™Χ§Χª ΧΧ Χ”ΧΧ•Χ§Χ Χ‘ΧΧ—Χ΅Χ Χ™Χª Χ‘ΧΆΧ ΧΆΧ¨Χ ΧΆΧ“Χ™Χ¤Χ•Χª Χ’Χ“Χ•Χ ΧΧ• Χ©Χ•Χ•Χ” ΧΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™
+				if (!push(infix[i], &st1))//Χ“Χ—Χ™Χ¤Χª Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™
 				{
 					printf("Pushing another element will result in stack overflow\n");
 					free(postFix);
@@ -161,8 +161,8 @@ tokens* InfixToPostfix(tokens* infix, int equationLength, int* postFixCount)//θς
 					exit(ERROR_CODE);
 				}
 				break;
-			case '('://ΰν δθεχο δπεληι δεΰ (
-				if (!push(infix[i], &st1))//δεΰ ιιγησ μξηρπιϊ
+			case '('://ΧΧ Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ (
+				if (!push(infix[i], &st1))//Χ”Χ•Χ Χ™Χ™Χ“Χ—Χ£ ΧΧΧ—Χ΅Χ Χ™Χª
 				{
 					printf("Pushing another element will result in stack overflow\n");
 					free(postFix);
@@ -170,27 +170,27 @@ tokens* InfixToPostfix(tokens* infix, int equationLength, int* postFixCount)//θς
 					exit(ERROR_CODE);
 				}
 				break;
-			case ')'://ΰν δθεχο δπεληι δεΰ )
-				while (peek(&st1, &signToken) && signToken.sign != '(')//λκ ςεγ δξηρπιϊ μΰ ψιχδ εδθεχο αξηρπιϊ μΰ (
+			case ')'://ΧΧ Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ )
+				while (peek(&st1, &signToken) && signToken.sign != '(')//Χ›Χ ΧΆΧ•Χ“ Χ”ΧΧ—Χ΅Χ Χ™Χª ΧΧ Χ¨Χ™Χ§Χ” Χ•Χ”ΧΧ•Χ§Χ Χ‘ΧΧ—Χ΅Χ Χ™Χª ΧΧ (
 				{
-					if (!pop(&st1, &signToken))//δθεχο ιεφΰ
+					if (!pop(&st1, &signToken))//Χ”ΧΧ•Χ§Χ Χ™Χ•Χ¦Χ
 					{
 						printf("Error: Failed to pop from stack.\n");
 						free(postFix);
 						free(st1.elements);
 						exit(ERROR_CODE);
 					}
-					postFix[(*postFixCount)++] = signToken;//ειελπρ μξςψκ δρετι
+					postFix[(*postFixCount)++] = signToken;//Χ•Χ™Χ•Χ›Χ Χ΅ ΧΧΧΆΧ¨Χ Χ”Χ΅Χ•Χ¤Χ™
 				}
-				if (st1.top == -1 || !pop(&st1, &signToken))//ΰν δβςπε μϊηιμϊ δξηρπιϊ ριξο ω ( μΰ πξφΰ
+				if (st1.top == -1 || !pop(&st1, &signToken))//ΧΧ Χ”Χ’ΧΆΧ Χ• ΧΧªΧ—Χ™ΧΧª Χ”ΧΧ—Χ΅Χ Χ™Χª Χ΅Χ™ΧΧ Χ© ( ΧΧ Χ ΧΧ¦Χ
 				{
-					printf("Error with parenthesis\n");//ϊεηζψ ωβιΰδ ωμ ρεβψιιν
+					printf("Error with parenthesis\n");//ΧªΧ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ” Χ©Χ Χ΅Χ•Χ’Χ¨Χ™Χ™Χ
 					free(postFix);
 					free(st1.elements);
 					exit(ERROR_CODE);
 				}
 				break;
-			default://αλμ ξχψδ ΰηψ ιεηζψ ωβιΰδ ωμ ϊεχο μΰ ηεχι
+			default://Χ‘Χ›Χ ΧΧ§Χ¨Χ” ΧΧ—Χ¨ Χ™Χ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ” Χ©Χ ΧªΧ•Χ§Χ ΧΧ Χ—Χ•Χ§Χ™
 				printf("Invalid token\n");
 				free(postFix);
 				free(st1.elements);
@@ -199,102 +199,102 @@ tokens* InfixToPostfix(tokens* infix, int equationLength, int* postFixCount)//θς
 		}
 	}
 
-	tokens remainToken;//ιφιψϊ θεχο ωπωΰψ αξηρπιϊ
-	while (st1.top > -1)//δεφΰϊ λμ δθεχπιν ωπωΰψε αξηρπιϊ εδλπρϊν μξςψκ δθεχπιν δρετι
+	tokens remainToken;//Χ™Χ¦Χ™Χ¨Χª ΧΧ•Χ§Χ Χ©Χ Χ©ΧΧ¨ Χ‘ΧΧ—Χ΅Χ Χ™Χª
+	while (st1.top > -1)//Χ”Χ•Χ¦ΧΧª Χ›Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ©Χ Χ©ΧΧ¨Χ• Χ‘ΧΧ—Χ΅Χ Χ™Χª Χ•Χ”Χ›Χ Χ΅ΧªΧ ΧΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ”Χ΅Χ•Χ¤Χ™
 	{
-		if (pop(&st1, &remainToken))//ΰν δξηρπιϊ μΰ ψιχδ
+		if (pop(&st1, &remainToken))//ΧΧ Χ”ΧΧ—Χ΅Χ Χ™Χª ΧΧ Χ¨Χ™Χ§Χ”
 		{
-			if (remainToken.sign == '(' || remainToken.sign == ')')//εδϊεχο ωδεφΰ δεΰ ρεβψ
+			if (remainToken.sign == '(' || remainToken.sign == ')')//Χ•Χ”ΧªΧ•Χ§Χ Χ©Χ”Χ•Χ¦Χ Χ”Χ•Χ Χ΅Χ•Χ’Χ¨
 			{
-				printf("Error with parenthesis\n");//ϊεηζψ ωβιΰδ ωμ ρεβψιιν
+				printf("Error with parenthesis\n");//ΧªΧ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ” Χ©Χ Χ΅Χ•Χ’Χ¨Χ™Χ™Χ
 				free(postFix);
 				free(st1.elements);
 				exit(ERROR_CODE);
 			}
-			postFix[*postFixCount] = remainToken;//ΰηψϊ δθεχο ιιλπρ μξςψκ δθεχπιν δρετι
+			postFix[*postFixCount] = remainToken;//ΧΧ—Χ¨Χª Χ”ΧΧ•Χ§Χ Χ™Χ™Χ›Χ Χ΅ ΧΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ”Χ΅Χ•Χ¤Χ™
 			(*postFixCount)++;
 		}
 	}
-	free(st1.elements);//ωηψεψ δξηρπιϊ
-	return postFix;//δηζψϊ ξςψκ δθεχπιν δρετι
+	free(st1.elements);//Χ©Χ—Χ¨Χ•Χ¨ Χ”ΧΧ—Χ΅Χ Χ™Χª
+	return postFix;//Χ”Χ—Χ–Χ¨Χª ΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ”Χ΅Χ•Χ¤Χ™
 }
 
 
 
-char* CreateEquation()//θςπϊ λπιρδ: χψιΰδ μτςεμδ, θςπϊ ιφιΰδ: ιφιψϊ ξςψκ ωμ ξωεεΰδ
+char* CreateEquation()//ΧΧΆΧ Χª Χ›Χ Χ™Χ΅Χ”: Χ§Χ¨Χ™ΧΧ” ΧΧ¤ΧΆΧ•ΧΧ”, ΧΧΆΧ Χª Χ™Χ¦Χ™ΧΧ”: Χ™Χ¦Χ™Χ¨Χª ΧΧΆΧ¨Χ Χ©Χ ΧΧ©Χ•Χ•ΧΧ”
 {
-	char tempBuffer[100];//ιφιψϊ ξςψκ ζξπι
+	char tempBuffer[100];//Χ™Χ¦Χ™Χ¨Χª ΧΧΆΧ¨Χ Χ–ΧΧ Χ™
 	printf("Enter equation: \n");
-	if (fgets(tempBuffer, sizeof(tempBuffer), stdin) == NULL)//ΰν διιϊδ αςιδ αχμιθϊ χμθ
+	if (fgets(tempBuffer, sizeof(tempBuffer), stdin) == NULL)//ΧΧ Χ”Χ™Χ™ΧªΧ” Χ‘ΧΆΧ™Χ” Χ‘Χ§ΧΧ™ΧΧª Χ§ΧΧ
 	{
-		printf("Input reading failed\n");//ϊεηζψ ωβιΰδ
+		printf("Input reading failed\n");//ΧªΧ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ”
 		return NULL;
 	}
 	printf("Input reading succeeded\n");
 
 	size_t len = strlen(tempBuffer);
-	if (len > 0 && tempBuffer[len - 1] == '\n')//δτιλϊ δριξο newline
+	if (len > 0 && tempBuffer[len - 1] == '\n')//Χ”Χ¤Χ™Χ›Χª Χ”Χ΅Χ™ΧΧ newline
 	{
-		tempBuffer[len - 1] = '\0';//μριξο ρεσ ξηψεζϊ
+		tempBuffer[len - 1] = '\0';//ΧΧ΅Χ™ΧΧ Χ΅Χ•Χ£ ΧΧ—Χ¨Χ•Χ–Χª
 	}
 
-	int size = strlen(tempBuffer);//ωξιψϊ βεγμ δξηψεζϊ
-	char* equation = (char*)malloc((size + 1) * sizeof(char));//ιφιψϊ ξηψεζϊ ξωεεΰδ αβεγμ ΰεψκ δξηψεζϊ δζξπιϊ
-	if (equation == NULL)//ΰν διιϊδ αςιδ αδχφαϊ ζιλψεο
+	int size = strlen(tempBuffer);//Χ©ΧΧ™Χ¨Χª Χ’Χ•Χ“Χ Χ”ΧΧ—Χ¨Χ•Χ–Χª
+	char* equation = (char*)malloc((size + 1) * sizeof(char));//Χ™Χ¦Χ™Χ¨Χª ΧΧ—Χ¨Χ•Χ–Χª ΧΧ©Χ•Χ•ΧΧ” Χ‘Χ’Χ•Χ“Χ ΧΧ•Χ¨Χ Χ”ΧΧ—Χ¨Χ•Χ–Χª Χ”Χ–ΧΧ Χ™Χª
+	if (equation == NULL)//ΧΧ Χ”Χ™Χ™ΧªΧ” Χ‘ΧΆΧ™Χ” Χ‘Χ”Χ§Χ¦Χ‘Χª Χ–Χ™Χ›Χ¨Χ•Χ
 	{
-		printf("Memory allocation failed\n");//ϊεηζψ ωβιΰδ
+		printf("Memory allocation failed\n");//ΧªΧ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ”
 		return NULL;
 	}
 
-	strcpy(equation, tempBuffer);//ΰηψϊ δξηψεζϊ ξδξςψκ δζξπι ϊεςϊχ μξςψκ δηγω
-	printf("Equation entered: %s\n", equation);//δγτρϊ δξηψεζϊ ωπχμθδ
-	return equation;//δηζψϊ δξηψεζϊ
+	strcpy(equation, tempBuffer);//ΧΧ—Χ¨Χª Χ”ΧΧ—Χ¨Χ•Χ–Χª ΧΧ”ΧΧΆΧ¨Χ Χ”Χ–ΧΧ Χ™ ΧªΧ•ΧΆΧªΧ§ ΧΧΧΆΧ¨Χ Χ”Χ—Χ“Χ©
+	printf("Equation entered: %s\n", equation);//Χ”Χ“Χ¤Χ΅Χª Χ”ΧΧ—Χ¨Χ•Χ–Χª Χ©Χ Χ§ΧΧΧ”
+	return equation;//Χ”Χ—Χ–Χ¨Χª Χ”ΧΧ—Χ¨Χ•Χ–Χª
 }
 
 
 int main()
 {
-	char* equation = CreateEquation();//ιφιψϊ ξςψκ ξωεεΰδ
-	if (equation == NULL)//ΰν διιϊδ αςιδ αδχφαϊ ζιλψεο
+	char* equation = CreateEquation();//Χ™Χ¦Χ™Χ¨Χª ΧΧΆΧ¨Χ ΧΧ©Χ•Χ•ΧΧ”
+	if (equation == NULL)//ΧΧ Χ”Χ™Χ™ΧªΧ” Χ‘ΧΆΧ™Χ” Χ‘Χ”Χ§Χ¦Χ‘Χª Χ–Χ™Χ›Χ¨Χ•Χ
 	{
-		printf("Failed to create equation.\n");//ϊεηζψ ωβιΰδ
+		printf("Failed to create equation.\n");//ΧªΧ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ”
 		return -1;
 	}
 	printf("Memory allocation succeeded for string\n");
 
-	int equationlength = strlen(equation);//ωξιψϊ ΰεψκ δξηψεζϊ
-	tokens* t1 = (tokens*)malloc(equationlength * sizeof(tokens));//ιφιψϊ ξςψκ θεχπιν αδϊΰν μΰεψκ ξςψκ δξωεεΰδ
-	if (t1 == NULL)//ΰν διιϊδ αςιδ αδχφαϊ δζιλψεο
+	int equationlength = strlen(equation);//Χ©ΧΧ™Χ¨Χª ΧΧ•Χ¨Χ Χ”ΧΧ—Χ¨Χ•Χ–Χª
+	tokens* t1 = (tokens*)malloc(equationlength * sizeof(tokens));//Χ™Χ¦Χ™Χ¨Χª ΧΧΆΧ¨Χ ΧΧ•Χ§Χ Χ™Χ Χ‘Χ”ΧªΧΧ ΧΧΧ•Χ¨Χ ΧΧΆΧ¨Χ Χ”ΧΧ©Χ•Χ•ΧΧ”
+	if (t1 == NULL)//ΧΧ Χ”Χ™Χ™ΧªΧ” Χ‘ΧΆΧ™Χ” Χ‘Χ”Χ§Χ¦Χ‘Χª Χ”Χ–Χ™Χ›Χ¨Χ•Χ
 	{
-		printf("Memory allocation failed\n");//ϊεηζψ ωβιΰδ
+		printf("Memory allocation failed\n");//ΧªΧ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ”
 		free(equation);
 		return -1;
 	}
 	printf("Memory allocation succeeded for tokens\n");
 
-	for (int i = 0; i < equationlength; i++)//ΰιτερ ξςψκ δθεχπιν
+	for (int i = 0; i < equationlength; i++)//ΧΧ™Χ¤Χ•Χ΅ ΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ
 	{
 		t1[i].value = NULL_TOKEN;
 		t1[i].sign = 0;
 		t1[i].number = false;
 	}
 
-	int index = 0;//ΰιπγχρ δϊημϊι
-	int answer = Tokenize(t1, equation, &index, equationlength);//ξιμει ξςψκ δθεχπιν
+	int index = 0;//ΧΧ™Χ Χ“Χ§Χ΅ Χ”ΧªΧ—ΧΧªΧ™
+	int answer = Tokenize(t1, equation, &index, equationlength);//ΧΧ™ΧΧ•Χ™ ΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ
 
-	if (answer != 0)//ΰν δεηζψ χεγ ωβιΰδ
+	if (answer != 0)//ΧΧ Χ”Χ•Χ—Χ–Χ¨ Χ§Χ•Χ“ Χ©Χ’Χ™ΧΧ”
 	{
-		printf("One of the tokens is invalid.\n");//ϊεηζψ ωβιΰδ
+		printf("One of the tokens is invalid.\n");//ΧªΧ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ”
 		free(equation);
 		free(t1);
 		return -1;
 	}
 	printf("Successfully tokenized the string\n");
 
-	int postFixCount;//ιφιψϊ ΰιπγχρ ξςψκ ρετι
-	tokens* postFix = InfixToPostfix(t1, equationlength, &postFixCount);//ξιμει δξςψκ δρετι
+	int postFixCount;//Χ™Χ¦Χ™Χ¨Χª ΧΧ™Χ Χ“Χ§Χ΅ ΧΧΆΧ¨Χ Χ΅Χ•Χ¤Χ™
+	tokens* postFix = InfixToPostfix(t1, equationlength, &postFixCount);//ΧΧ™ΧΧ•Χ™ Χ”ΧΧΆΧ¨Χ Χ”Χ΅Χ•Χ¤Χ™
 
-	for (int i = 0; i < postFixCount; i++)//δγτρϊ δξςψκ δρετι
+	for (int i = 0; i < postFixCount; i++)//Χ”Χ“Χ¤Χ΅Χª Χ”ΧΧΆΧ¨Χ Χ”Χ΅Χ•Χ¤Χ™
 	{
 		if (postFix[i].number)
 		{
@@ -307,9 +307,9 @@ int main()
 	}
 	printf("\n");
 	int value = parser(postFix, postFixCount);
-	if (value != 1)//ΰν ξδτςεμδ δεηζψ -1
+	if (value != 1)//ΧΧ ΧΧ”Χ¤ΧΆΧ•ΧΧ” Χ”Χ•Χ—Χ–Χ¨ -1
 	{
-		printf("Value: %d\n", value);//ϊεηζψ ωβιΰδ
+		printf("Value: %d\n", value);//ΧªΧ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ”
 	}
 	free(equation);
 	free(t1);
