@@ -256,123 +256,91 @@ char* CreateEquation(bool verbose)//טענת כניסה: קריאה לפעולה
 	return equation;//החזרת המחרוזת
 }
 
-int Verbose()
+int Verbose(bool verbose)
 {
-	char* equation = CreateEquation(true);//יצירת מערך משוואה
-	if (equation == NULL)//אם הייתה בעיה בהקצבת זיכרון
+	char* equation = CreateEquation(verbose);//יצירת מערך משוואה
+	do
 	{
-		printf("Failed to create equation.\n");//תוחזר שגיאה
-		return -1;
-	}
-	printf("Memory allocation succeeded for string\n");
+		if (equation == NULL)//אם הייתה בעיה בהקצבת זיכרון
+		{
+			printf("Failed to create equation.\n");//תוחזר שגיאה
+			return -1;
+		}
+		if (verbose)
+		{
+			printf("Memory allocation succeeded for string\n");
+		}
+		int equationlength = strlen(equation);//שמירת אורך המחרוזת
+		tokens* t1 = (tokens*)malloc(equationlength * sizeof(tokens));//יצירת מערך טוקנים בהתאם לאורך מערך המשוואה
+		if (t1 == NULL)//אם הייתה בעיה בהקצבת הזיכרון
+		{
+			printf("Memory allocation failed\n");//תוחזר שגיאה
+			free(equation);
+			return -1;
+		}
+		if (verbose)
+		{
+			printf("Memory allocation succeeded for tokens\n");
+		}
 
-	int equationlength = strlen(equation);//שמירת אורך המחרוזת
-	tokens* t1 = (tokens*)malloc(equationlength * sizeof(tokens));//יצירת מערך טוקנים בהתאם לאורך מערך המשוואה
-	if (t1 == NULL)//אם הייתה בעיה בהקצבת הזיכרון
-	{
-		printf("Memory allocation failed\n");//תוחזר שגיאה
-		free(equation);
-		return -1;
-	}
-	printf("Memory allocation succeeded for tokens\n");
+		for (int i = 0; i < equationlength; i++)//איפוס מערך הטוקנים
+		{
+			t1[i].value = NULL_TOKEN;
+			t1[i].sign = 0;
+			t1[i].number = false;
+		}
 
-	for (int i = 0; i < equationlength; i++)//איפוס מערך הטוקנים
-	{
-		t1[i].value = NULL_TOKEN;
-		t1[i].sign = 0;
-		t1[i].number = false;
-	}
+		int index = 0;//אינדקס התחלתי
+		int answer = Tokenize(t1, equation, &index, equationlength);//מילוי מערך הטוקנים
 
-	int index = 0;//אינדקס התחלתי
-	int answer = Tokenize(t1, equation, &index, equationlength);//מילוי מערך הטוקנים
+		if (answer != 0)//אם הוחזר קוד שגיאה
+		{
+			printf("One of the tokens is invalid.\n");//תוחזר שגיאה
+			free(equation);
+			free(t1);
+			return -1;
+		}
+		if (verbose)
+		{
+			printf("Successfully tokenized the string\n");
+		}
 
-	if (answer != 0)//אם הוחזר קוד שגיאה
-	{
-		printf("One of the tokens is invalid.\n");//תוחזר שגיאה
+		int postFixCount;//יצירת אינדקס מערך סופי
+		tokens* postFix = InfixToPostfix(t1, equationlength, &postFixCount);//מילוי המערך הסופי
+		if (verbose)
+		{
+			printf("Postfix notation: ");
+			for (int i = 0; i < postFixCount; i++)//הדפסת המערך הסופי
+			{
+				if (postFix[i].number)
+				{
+					printf("%d", postFix[i].value);
+				}
+				else
+				{
+					printf("%c", postFix[i].sign);
+				}
+			}
+			printf("\n");
+		}
+		int value = parser(postFix, postFixCount);
+		if (value != 1)//אם מהפעולה הוחזר -1
+		{
+			printf("Result: %d\n", value);//תוחזר שגיאה
+		}
 		free(equation);
 		free(t1);
-		return -1;
-	}
-	printf("Successfully tokenized the string\n");
-
-	int postFixCount;//יצירת אינדקס מערך סופי
-	tokens* postFix = InfixToPostfix(t1, equationlength, &postFixCount);//מילוי המערך הסופי
-	printf("Postfix notation: ");
-	for (int i = 0; i < postFixCount; i++)//הדפסת המערך הסופי
-	{
-		if (postFix[i].number)
-		{
-			printf("%d", postFix[i].value);
-		}
-		else
-		{
-			printf("%c", postFix[i].sign);
-		}
-	}
-	printf("\n");
-	int value = parser(postFix, postFixCount);
-	if (value != 1)//אם מהפעולה הוחזר -1
-	{
-		printf("Result: %d\n", value);//תוחזר שגיאה
-	}
-	free(equation);
-	free(t1);
-	free(postFix);
-	return 0;
-}
-
-int NonVerbose()
-{
-	char* equation = CreateEquation(false);//יצירת מערך משוואה
-	if (equation == NULL)//אם הייתה בעיה בהקצבת זיכרון
-	{
-		return -1;
-	}
-	int equationlength = strlen(equation);//שמירת אורך המחרוזת
-	tokens* t1 = (tokens*)malloc(equationlength * sizeof(tokens));//יצירת מערך טוקנים בהתאם לאורך מערך המשוואה
-	if (t1 == NULL)//אם הייתה בעיה בהקצבת הזיכרון
-	{
-		free(equation);
-		return -1;
-	}
-	for (int i = 0; i < equationlength; i++)//איפוס מערך הטוקנים
-	{
-		t1[i].value = NULL_TOKEN;
-		t1[i].sign = 0;
-		t1[i].number = false;
-	}
-
-	int index = 0;//אינדקס התחלתי
-	int answer = Tokenize(t1, equation, &index, equationlength);//מילוי מערך הטוקנים
-
-	if (answer != 0)//אם הוחזר קוד שגיאה
-	{
-		free(equation);
-		free(t1);
-		return -1;
-	}
-
-	int postFixCount;//יצירת אינדקס מערך סופי
-	tokens* postFix = InfixToPostfix(t1, equationlength, &postFixCount);//מילוי המערך הסופי
-	int value = parser(postFix, postFixCount);
-	if (value != 1)//אם מהפעולה הוחזר -1
-	{
-		printf("Result: %d\n", value);//תוחזר שגיאה
-	}
-	free(equation);
-	free(t1);
-	free(postFix);
+		free(postFix);
+		equation = CreateEquation(verbose);//יצירת מערך משוואה
+	} while (strcmp(equation, "exit") != 0);
 	return 0;
 }
 int main(int argc, char *argv[])
 {
 	if (argc > 1 && strcmp(argv[1], "-v") == 0)
 	{
-		return Verbose();
+		return Verbose(true);
 	}
-	else
-	{
-		return NonVerbose();
-	}
+	return Verbose(false);
 	
 }
