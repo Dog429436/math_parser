@@ -27,7 +27,7 @@ void poppingFromStack(stack* st1, tokens currentToken, tokens* postFix, int* pos
 int parser(tokens* postFix, int postFixLength)//טענת כניסה: קריאה לפעולה עם מערך סופי וגודל מערך, טענת יציאה: החזרת ערך של המשוואה
 {
 	stack numbers;//יצירת מחסנית למספרים
-	int num1 = 0, num2 = 0;
+	double num1 = 0, num2 = 0;
 	numbers.elements = malloc(postFixLength * sizeof(tokens));//הקצבת זיכרון למערך המחסנית
 	if (numbers.elements == NULL)//אם יש בעיה בהקצבת הזיכרון
 	{
@@ -221,17 +221,19 @@ tokens* InfixToPostfix(tokens* infix, int equationLength, int* postFixCount)//ט
 
 
 
-char* CreateEquation()//טענת כניסה: קריאה לפעולה, טענת יציאה: יצירת מערך של משוואה
+char* CreateEquation(bool verbose)//טענת כניסה: קריאה לפעולה, טענת יציאה: יצירת מערך של משוואה
 {
 	char tempBuffer[100];//יצירת מערך זמני
-	printf("Enter equation: \n");
+	printf("Enter equation: ");
 	if (fgets(tempBuffer, sizeof(tempBuffer), stdin) == NULL)//אם הייתה בעיה בקליטת קלט
 	{
 		printf("Input reading failed\n");//תוחזר שגיאה
 		return NULL;
 	}
-	printf("Input reading succeeded\n");
-
+	if (verbose)
+	{
+		printf("Input reading succeeded\n");
+	}
 	size_t len = strlen(tempBuffer);
 	if (len > 0 && tempBuffer[len - 1] == '\n')//הפיכת הסימן newline
 	{
@@ -247,14 +249,16 @@ char* CreateEquation()//טענת כניסה: קריאה לפעולה, טענת �
 	}
 
 	strcpy(equation, tempBuffer);//אחרת המחרוזת מהמערך הזמני תועתק למערך החדש
-	printf("Equation entered: %s\n", equation);//הדפסת המחרוזת שנקלטה
+	if (verbose)
+	{
+		printf("Equation entered: %s\n", equation);//הדפסת המחרוזת שנקלטה
+	}
 	return equation;//החזרת המחרוזת
 }
 
-
-int main()
+int Verbose()
 {
-	char* equation = CreateEquation();//יצירת מערך משוואה
+	char* equation = CreateEquation(true);//יצירת מערך משוואה
 	if (equation == NULL)//אם הייתה בעיה בהקצבת זיכרון
 	{
 		printf("Failed to create equation.\n");//תוחזר שגיאה
@@ -293,7 +297,7 @@ int main()
 
 	int postFixCount;//יצירת אינדקס מערך סופי
 	tokens* postFix = InfixToPostfix(t1, equationlength, &postFixCount);//מילוי המערך הסופי
-
+	printf("Postfix notation: ");
 	for (int i = 0; i < postFixCount; i++)//הדפסת המערך הסופי
 	{
 		if (postFix[i].number)
@@ -309,10 +313,66 @@ int main()
 	int value = parser(postFix, postFixCount);
 	if (value != 1)//אם מהפעולה הוחזר -1
 	{
-		printf("Value: %d\n", value);//תוחזר שגיאה
+		printf("Result: %d\n", value);//תוחזר שגיאה
 	}
 	free(equation);
 	free(t1);
 	free(postFix);
 	return 0;
+}
+
+int NonVerbose()
+{
+	char* equation = CreateEquation(false);//יצירת מערך משוואה
+	if (equation == NULL)//אם הייתה בעיה בהקצבת זיכרון
+	{
+		return -1;
+	}
+	int equationlength = strlen(equation);//שמירת אורך המחרוזת
+	tokens* t1 = (tokens*)malloc(equationlength * sizeof(tokens));//יצירת מערך טוקנים בהתאם לאורך מערך המשוואה
+	if (t1 == NULL)//אם הייתה בעיה בהקצבת הזיכרון
+	{
+		free(equation);
+		return -1;
+	}
+	for (int i = 0; i < equationlength; i++)//איפוס מערך הטוקנים
+	{
+		t1[i].value = NULL_TOKEN;
+		t1[i].sign = 0;
+		t1[i].number = false;
+	}
+
+	int index = 0;//אינדקס התחלתי
+	int answer = Tokenize(t1, equation, &index, equationlength);//מילוי מערך הטוקנים
+
+	if (answer != 0)//אם הוחזר קוד שגיאה
+	{
+		free(equation);
+		free(t1);
+		return -1;
+	}
+
+	int postFixCount;//יצירת אינדקס מערך סופי
+	tokens* postFix = InfixToPostfix(t1, equationlength, &postFixCount);//מילוי המערך הסופי
+	int value = parser(postFix, postFixCount);
+	if (value != 1)//אם מהפעולה הוחזר -1
+	{
+		printf("Result: %d\n", value);//תוחזר שגיאה
+	}
+	free(equation);
+	free(t1);
+	free(postFix);
+	return 0;
+}
+int main(int argc, char *argv[])
+{
+	if (argc > 1 && strcmp(argv[1], "-v" == 0))
+	{
+		return Verbose();
+	}
+	else
+	{
+		return NonVerbose();
+	}
+	
 }
