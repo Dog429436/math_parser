@@ -3,58 +3,58 @@
 #include "tokenization.h"
 #include <stdbool.h>
 
-int Tokenize(tokens* tokenptr, char* equation, int* p_index, int equationlength) //θςπϊ λπιρδ: χψιΰδ μτςεμδ ςν ξςψκ θεχπιν ψιχ, ξςψκ ωμ ξωεεΰδ, ξφαις μΰιπγχρ δξςψκ ωμ δξωεεΰδ εΰεψκ δξςψκ, θςπϊ ιφιΰδ, δτιλϊ ςμ ϊε αξςψκ μθεχο ξϊξθι
+int Tokenize(tokens* tokenptr, char* equation, int* p_index, int equationlength) //ΧΧΆΧ Χª Χ›Χ Χ™Χ΅Χ”: Χ§Χ¨Χ™ΧΧ” ΧΧ¤ΧΆΧ•ΧΧ” ΧΆΧ ΧΧΆΧ¨Χ ΧΧ•Χ§Χ Χ™Χ Χ¨Χ™Χ§, ΧΧΆΧ¨Χ Χ©Χ ΧΧ©Χ•Χ•ΧΧ”, ΧΧ¦Χ‘Χ™ΧΆ ΧΧΧ™Χ Χ“Χ§Χ΅ Χ”ΧΧΆΧ¨Χ Χ©Χ Χ”ΧΧ©Χ•Χ•ΧΧ” Χ•ΧΧ•Χ¨Χ Χ”ΧΧΆΧ¨Χ, ΧΧΆΧ Χª Χ™Χ¦Χ™ΧΧ”, Χ”Χ¤Χ™Χ›Χª ΧΆΧ ΧªΧ• Χ‘ΧΧΆΧ¨Χ ΧΧΧ•Χ§Χ ΧΧªΧΧΧ™
 {
-	int index = *p_index;//δωξϊ δΰιπγχρ δπεληι
+	int index = *p_index;//Χ”Χ©ΧΧª Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ”Χ Χ•Χ›Χ—Χ™
 
-	while (index < equationlength && (equation[index] == ' ' || equation[index] == '\t')) //λμ ςεγ δϊε δπεληι δεΰ ψεεη εδΰιπγχρ δπεληι αϊεκ δξςψκ δεΰ ιςμδ
+	while (index < equationlength && (equation[index] == ' ' || equation[index] == '\t')) //Χ›Χ ΧΆΧ•Χ“ Χ”ΧªΧ• Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ Χ¨Χ•Χ•Χ— Χ•Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ”Χ Χ•Χ›Χ—Χ™ Χ‘ΧªΧ•Χ Χ”ΧΧΆΧ¨Χ Χ”Χ•Χ Χ™ΧΆΧΧ”
 	{
 		index++;
 	}
 
-	*p_index = index;//ςγλεο δξφαις ωμ δΰιπγχρ δπεληι
+	*p_index = index;//ΧΆΧ“Χ›Χ•Χ Χ”ΧΧ¦Χ‘Χ™ΧΆ Χ©Χ Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ”Χ Χ•Χ›Χ—Χ™
 
-	if (index < equationlength) //ΰν δΰιπγχρ δπεληι δεΰ αϊεκ δξςψκ
+	if (index < equationlength) //ΧΧ Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ Χ‘ΧªΧ•Χ Χ”ΧΧΆΧ¨Χ
 	{
-		tokens t1;//ιφιψϊ θεχο
+		tokens t1;//Χ™Χ¦Χ™Χ¨Χª ΧΧ•Χ§Χ
 
-		if (equation[index] == '-' && isUnaryMinus(equation, index)) //ΰν δθεχο δπεληι δεΰ ξρτψ ωμιμι
+		if (equation[index] == '-' && isUnaryMinus(equation, index)) //ΧΧ Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ ΧΧ΅Χ¤Χ¨ Χ©ΧΧ™ΧΧ™
 		{
-			index++;//δΰιπγχρ ιςμδ
-			int start_index = index;//δωξϊ ΰιπγχρ δϊημϊι
-			int num = FindNumbers(&index, equation);//χψιΰδ μτςεμδ δξηαψϊ θεχπιν ωμ ρτψεϊ
+			index++;//Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ™ΧΆΧΧ”
+			int start_index = index;//Χ”Χ©ΧΧª ΧΧ™Χ Χ“Χ§Χ΅ Χ”ΧªΧ—ΧΧªΧ™
+			int num = FindNumbers(&index, equation);//Χ§Χ¨Χ™ΧΧ” ΧΧ¤ΧΆΧ•ΧΧ” Χ”ΧΧ—Χ‘Χ¨Χª ΧΧ•Χ§Χ Χ™Χ Χ©Χ Χ΅Χ¤Χ¨Χ•Χª
 
-			if (start_index == index) //ΰν δΰιπγχρ μΰ ςμδ αλμμ ριξο ωιω ριξο ξιπερ ψιχ
+			if (start_index == index) //ΧΧ Χ”ΧΧ™Χ Χ“Χ§Χ΅ ΧΧ ΧΆΧΧ” Χ‘Χ›ΧΧ Χ΅Χ™ΧΧ Χ©Χ™Χ© Χ΅Χ™ΧΧ ΧΧ™Χ Χ•Χ΅ Χ¨Χ™Χ§
 			{
-				printf("Input is invalid\n");//ϊεηζψ ωβιΰδ
+				printf("Input is invalid\n");//ΧªΧ•Χ—Χ–Χ¨ Χ©Χ’Χ™ΧΧ”
 				return -1;
 			}
 
-			t1.value = -num;//ςψκ δθεχο ιδιδ δξρτψ δωμιμι
-			t1.sign = 0;//δριξο ιδιδ 0
+			t1.value = -num;//ΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ”Χ™Χ” Χ”ΧΧ΅Χ¤Χ¨ Χ”Χ©ΧΧ™ΧΧ™
+			t1.sign = 0;//Χ”Χ΅Χ™ΧΧ Χ™Χ”Χ™Χ” 0
 			t1.number = true;
-			tokenptr[*p_index] = t1;//δθεχο ιδιδ αΰιπγχρ δπεληι αξςψκ δθεχπιν
+			tokenptr[*p_index] = t1;//Χ”ΧΧ•Χ§Χ Χ™Χ”Χ™Χ” Χ‘ΧΧ™Χ Χ“Χ§Χ΅ Χ”Χ Χ•Χ›Χ—Χ™ Χ‘ΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ
 
-			for (int i = start_index; i < index; i++) //δωξϊ λμ δθεχπιν αξχεξεϊ ωδιε αδν ρτψεϊ ωδτλε μξρτψ ΰηγ μθεχπιν ωγεψωιν δϊςμξεϊ
+			for (int i = start_index; i < index; i++) //Χ”Χ©ΧΧª Χ›Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ‘ΧΧ§Χ•ΧΧ•Χª Χ©Χ”Χ™Χ• Χ‘Χ”Χ Χ΅Χ¤Χ¨Χ•Χª Χ©Χ”Χ¤Χ›Χ• ΧΧΧ΅Χ¤Χ¨ ΧΧ—Χ“ ΧΧΧ•Χ§Χ Χ™Χ Χ©Χ“Χ•Χ¨Χ©Χ™Χ Χ”ΧªΧΆΧΧΧ•Χª
 			{
 				tokenptr[i].value = NULL_TOKEN;
 				tokenptr[i].sign = 0;
 				tokenptr[i].number = false;
 			}
 
-			*p_index = index;//ςγλεο δξφαις μΰιπγχρ δπεληι
+			*p_index = index;//ΧΆΧ“Χ›Χ•Χ Χ”ΧΧ¦Χ‘Χ™ΧΆ ΧΧΧ™Χ Χ“Χ§Χ΅ Χ”Χ Χ•Χ›Χ—Χ™
 		}
-		else if (equation[index] >= '0' && equation[index] <= '9') //ΰν δϊε δπεληι δεΰ ξρτψ
+		else if (equation[index] >= '0' && equation[index] <= '9') //ΧΧ Χ”ΧªΧ• Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ ΧΧ΅Χ¤Χ¨
 		{
-			int start_index = index;//δωξϊ δΰιπγχρ δπεληι
-			int num = FindNumbers(&index, equation);//χψιΰδ μτςεμδ μηιαεψ θεχπιν ωμ ρτψεϊ μξρτψ ΰηγ
+			int start_index = index;//Χ”Χ©ΧΧª Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ”Χ Χ•Χ›Χ—Χ™
+			int num = FindNumbers(&index, equation);//Χ§Χ¨Χ™ΧΧ” ΧΧ¤ΧΆΧ•ΧΧ” ΧΧ—Χ™Χ‘Χ•Χ¨ ΧΧ•Χ§Χ Χ™Χ Χ©Χ Χ΅Χ¤Χ¨Χ•Χª ΧΧΧ΅Χ¤Χ¨ ΧΧ—Χ“
 
 			t1.value = num;
 			t1.sign = 0;
 			t1.number = true;
 			tokenptr[start_index] = t1;
 
-			for (int i = start_index + 1; i < index; i++) //δτιλϊ λμ δθεχπιν ωαδν διε ρτψεϊ ωδτλε μξρτψ ΰηγ μθεχπιν ωγεψωιν δϊςμξεϊ
+			for (int i = start_index + 1; i < index; i++) //Χ”Χ¤Χ™Χ›Χª Χ›Χ Χ”ΧΧ•Χ§Χ Χ™Χ Χ©Χ‘Χ”Χ Χ”Χ™Χ• Χ΅Χ¤Χ¨Χ•Χª Χ©Χ”Χ¤Χ›Χ• ΧΧΧ΅Χ¤Χ¨ ΧΧ—Χ“ ΧΧΧ•Χ§Χ Χ™Χ Χ©Χ“Χ•Χ¨Χ©Χ™Χ Χ”ΧªΧΆΧΧΧ•Χª
 			{
 				tokenptr[i].value = NULL_TOKEN;
 				tokenptr[i].sign = 0;
@@ -65,10 +65,10 @@ int Tokenize(tokens* tokenptr, char* equation, int* p_index, int equationlength)
 		}
 		else if (equation[index] == '+' || equation[index] == '-' ||
 			equation[index] == '*' || equation[index] == '/' ||
-			equation[index] == '(' || equation[index] == ')') //ΰν δθεχο δπεληι δεΰ ΰηγ ξδριξπιν δαΰιν
+			equation[index] == '(' || equation[index] == ')') //ΧΧ Χ”ΧΧ•Χ§Χ Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ ΧΧ—Χ“ ΧΧ”Χ΅Χ™ΧΧ Χ™Χ Χ”Χ‘ΧΧ™Χ
 		{
-			t1.value = 0;//δςψκ ιδιδ 0
-			t1.sign = equation[index];//δριξο ιδιδ δϊε δπεληι
+			t1.value = 0;//Χ”ΧΆΧ¨Χ Χ™Χ”Χ™Χ” 0
+			t1.sign = equation[index];//Χ”Χ΅Χ™ΧΧ Χ™Χ”Χ™Χ” Χ”ΧªΧ• Χ”Χ Χ•Χ›Χ—Χ™
 			t1.number = false;
 			tokenptr[index] = t1;
 
@@ -80,47 +80,47 @@ int Tokenize(tokens* tokenptr, char* equation, int* p_index, int equationlength)
 			return -1;
 		}
 
-		return Tokenize(tokenptr, equation, p_index, equationlength);//δηζψϊ ξςψκ δθεχπιν
+		return Tokenize(tokenptr, equation, p_index, equationlength);//Χ”Χ—Χ–Χ¨Χª ΧΧΆΧ¨Χ Χ”ΧΧ•Χ§Χ Χ™Χ
 	}
 
 	return 0;
 }
 
-int FindNumbers(int* index, char* equation)//θςπϊ λπιρδ: χψιΰδ μτςεμδ ςν ξφαις μΰιπγχρ εξςψκ, θςπϊ ιφιΰδ: δτιλϊ ψφσ ωμ θεχπιν ωμ ρτψεϊ μξρτψ ααριρ 10 δηζψϊε εςιγλεο ΰιπγχρ δξςψκ
+int FindNumbers(int* index, char* equation)//ΧΧΆΧ Χª Χ›Χ Χ™Χ΅Χ”: Χ§Χ¨Χ™ΧΧ” ΧΧ¤ΧΆΧ•ΧΧ” ΧΆΧ ΧΧ¦Χ‘Χ™ΧΆ ΧΧΧ™Χ Χ“Χ§Χ΅ Χ•ΧΧΆΧ¨Χ, ΧΧΆΧ Χª Χ™Χ¦Χ™ΧΧ”: Χ”Χ¤Χ™Χ›Χª Χ¨Χ¦Χ£ Χ©Χ ΧΧ•Χ§Χ Χ™Χ Χ©Χ Χ΅Χ¤Χ¨Χ•Χª ΧΧΧ΅Χ¤Χ¨ Χ‘Χ‘Χ΅Χ™Χ΅ 10 Χ”Χ—Χ–Χ¨ΧªΧ• Χ•ΧΆΧ™Χ“Χ›Χ•Χ ΧΧ™Χ Χ“Χ§Χ΅ Χ”ΧΧΆΧ¨Χ
 {
 	int num = 0;
 	int i = *index;
 	int length = strlen(equation);
-	while (i < length && equation[i] >= '0' && equation[i] <= '9')//λμ ςεγ δϊε δπεληι δεΰ ξρτψ
+	while (i < length && equation[i] >= '0' && equation[i] <= '9')//Χ›Χ ΧΆΧ•Χ“ Χ”ΧªΧ• Χ”Χ Χ•Χ›Χ—Χ™ Χ”Χ•Χ ΧΧ΅Χ¤Χ¨
 	{
-		num = num * 10 + equation[i] - '0';//ιεψλα ξρτψ ααριρ 10
+		num = num * 10 + equation[i] - '0';//Χ™Χ•Χ¨Χ›Χ‘ ΧΧ΅Χ¤Χ¨ Χ‘Χ‘Χ΅Χ™Χ΅ 10
 		i++;
 	}
-	*index = i;//ςγλεο ΰιπγχρ δξςψκ
-	return num;//δηζψϊ δξρτψ
+	*index = i;//ΧΆΧ“Χ›Χ•Χ ΧΧ™Χ Χ“Χ§Χ΅ Χ”ΧΧΆΧ¨Χ
+	return num;//Χ”Χ—Χ–Χ¨Χª Χ”ΧΧ΅Χ¤Χ¨
 }
 
-bool isUnaryMinus(char* equation, int minus_index)//θςπϊ λπιρδ: χψιΰδ μτςεμδ ςν ξςψκ εΰιπγχρ ωμ ξιπερ, θςπϊ ιφιΰδ: δηζψϊ ΰξϊ ΰν δξρτψ ωμιμι ΰε δεΰ ξρτψ μΰηψ ριξο ξιπερ
+bool isUnaryMinus(char* equation, int minus_index)//ΧΧΆΧ Χª Χ›Χ Χ™Χ΅Χ”: Χ§Χ¨Χ™ΧΧ” ΧΧ¤ΧΆΧ•ΧΧ” ΧΆΧ ΧΧΆΧ¨Χ Χ•ΧΧ™Χ Χ“Χ§Χ΅ Χ©Χ ΧΧ™Χ Χ•Χ΅, ΧΧΆΧ Χª Χ™Χ¦Χ™ΧΧ”: Χ”Χ—Χ–Χ¨Χª ΧΧΧª ΧΧ Χ”ΧΧ΅Χ¤Χ¨ Χ©ΧΧ™ΧΧ™ ΧΧ• Χ”Χ•Χ ΧΧ΅Χ¤Χ¨ ΧΧΧ—Χ¨ Χ΅Χ™ΧΧ ΧΧ™Χ Χ•Χ΅
 {
-	if (minus_index == 0)//ΰν δξιπερ δεΰ αϊηιμϊ δξωεεΰδ ΰζ ζδ ξρτψ ωμιμι
+	if (minus_index == 0)//ΧΧ Χ”ΧΧ™Χ Χ•Χ΅ Χ”Χ•Χ Χ‘ΧªΧ—Χ™ΧΧª Χ”ΧΧ©Χ•Χ•ΧΧ” ΧΧ– Χ–Χ” ΧΧ΅Χ¤Χ¨ Χ©ΧΧ™ΧΧ™
 	{
 		return true;
 	}
 
-	int prev_index = minus_index - 1;//δωξϊ δϊε αΰιπγχρ ωμτπι δΰιπγχρ ωπιϊο
-	while (prev_index >= 0 && (equation[prev_index] == ' ' || equation[prev_index] == '\t'))//λμ ςεγ δΰιπγχρ βγεμ ξ0
+	int prev_index = minus_index - 1;//Χ”Χ©ΧΧª Χ”ΧªΧ• Χ‘ΧΧ™Χ Χ“Χ§Χ΅ Χ©ΧΧ¤Χ Χ™ Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ©Χ Χ™ΧªΧ
+	while (prev_index >= 0 && (equation[prev_index] == ' ' || equation[prev_index] == '\t'))//Χ›Χ ΧΆΧ•Χ“ Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ’Χ“Χ•Χ Χ0
 	{
-		prev_index--;//δΰιπγχρ ιψγ
+		prev_index--;//Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ™Χ¨Χ“
 	}
-	if (prev_index < 0)//ΰν δΰιπγχρ ιφΰ ξδξςψκ
+	if (prev_index < 0)//ΧΧ Χ”ΧΧ™Χ Χ“Χ§Χ΅ Χ™Χ¦Χ ΧΧ”ΧΧΆΧ¨Χ
 	{
-		return true;//δηζψϊ ΰξϊ
+		return true;//Χ”Χ—Χ–Χ¨Χª ΧΧΧª
 	}
-	char prev_char = equation[prev_index];//ΰν ξιπερ αΰ μΰηψ ριξο ξϊξθι ΰζ ζδ ξρτψ ωμιμι
+	char prev_char = equation[prev_index];//ΧΧ ΧΧ™Χ Χ•Χ΅ Χ‘Χ ΧΧΧ—Χ¨ Χ΅Χ™ΧΧ ΧΧªΧΧΧ™ ΧΧ– Χ–Χ” ΧΧ΅Χ¤Χ¨ Χ©ΧΧ™ΧΧ™
 	if (prev_char == '(' || prev_char == '+' || prev_char == '-' ||
 		prev_char == '*' || prev_char == '/')
 	{
 		return true;
 	}
-	return false;//ΰηψϊ ιεηζψ ωχψ
+	return false;//ΧΧ—Χ¨Χª Χ™Χ•Χ—Χ–Χ¨ Χ©Χ§Χ¨
 }
