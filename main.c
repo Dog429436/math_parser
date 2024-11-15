@@ -255,12 +255,31 @@ char* CreateEquation(bool verbose)//טענת כניסה: קריאה לפעולה
 	}
 	return equation;//החזרת המחרוזת
 }
+#include <stdio.h>
 
+void printMenu() {
+	printf("===================================\n");
+	printf("       Welcome to Math Parser\n");
+	printf("===================================\n");
+	printf("Please select an option:\n\n");
+	printf("  1. Exit the parser\n");
+	printf("  2. Enter an equation\n\n");
+	printf("===================================\n");
+	printf("Input: ");
+}
 int Verbose(bool verbose)
 {
-	char* equation = CreateEquation(verbose);//יצירת מערך משוואה
+	char command = '1';
+	printMenu();
+	scanf("%c", &command);
+	if (command != '2')
+	{
+		return 0;
+	}
 	do
 	{
+		getc(stdin);
+		char *equation = CreateEquation(verbose);//יצירת מערך משוואה
 		if (equation == NULL)//אם הייתה בעיה בהקצבת זיכרון
 		{
 			printf("Failed to create equation.\n");//תוחזר שגיאה
@@ -331,8 +350,9 @@ int Verbose(bool verbose)
 		free(equation);
 		free(t1);
 		free(postFix);
-		equation = CreateEquation(verbose);//יצירת מערך משוואה
-	} while (strcmp(equation, "exit") != 0);
+		printf("Input: ");
+		scanf("%c", &command);
+	} while (command != '2');
 	return 0;
 }
 int main(int argc, char *argv[])
